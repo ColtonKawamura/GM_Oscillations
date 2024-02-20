@@ -127,7 +127,7 @@ dt = 8.53793823217796e-06;
 left_wall_list = probe1;
 tvec = step*dt; %Creates a time vector. 
 omega_D = 2*pi*1; %2 pi f
-[~,isort] = sort(x0); %sorts the elements of the vector x0 in ascending order and saves the original indices of the sorted elements into the variable isort
+[~,isort] = sort(x0); %Not needed for mine
 iskip = 1;
 list = [];
 b_start = 0;
@@ -142,9 +142,9 @@ for nn = isort(1:iskip:end) %iterates through a subset of indices from isort, st
             i0 = find(x_temp>x0(nn)+0.5*(max(x_temp)-x0(nn)),1,'first'); %Gets the first occurence when x rises to .5 max amp
             X = tvec(i0:end); %Shaves off elements of tvec that occur before x_temp rising to .5 of max value
             Y = x_temp(i0:end)-x0(nn); %Y = displacement of x
-            yu = max(Y(round(end/2):end)); %Max value in the second half of Y
-            yl = min(Y(round(end/2):end)); %Min value in the second half of Y
-            yr = (yu-yl);                               % Range of ‘y’
+            yu = max(Y(round(end/2):end)); %Max value in the upper half of Y
+            yl = min(Y(round(end/2):end)); %Min value in the upper half of Y
+            yr = (yu-yl);                               % Range of ‘y’ in the upper part
             yz = Y-yu+(yr/2); %Centers the data around zero after the max value subtracted
             zx = X(yz .* circshift(yz,[0 1]) <= 0);     % Find zero-crossings
             per = 2*mean(diff(zx));                     % Estimate period
@@ -185,3 +185,11 @@ for nn = isort(1:iskip:end) %iterates through a subset of indices from isort, st
     end
 
 end
+
+%%%% This is the start %%%
+fit = @(b, X) b(1) .* sin(w_D * X - b(2)); % Function to fit
+fcn = @(b) sum((fit(b, step) - probe1).^2); % Least-Squares cost function
+initial_guess = [initial_amplitude; initial_phase_offset];
+[s, fval, exitflag] = fminsearch(fcn, initial_guess);
+[R, P] = corrcoef(fit(s, step), probe1);
+R2 = R.^2;
