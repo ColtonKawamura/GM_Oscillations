@@ -1,0 +1,191 @@
+###############################################
+# The purpose of this script is to initialize condtions 
+# from script.IC.read.compress restart file and 
+# wiggle the bottom
+
+# Output is two yaml files, VMD file, and movies of
+# the simulation.
+
+# The following variables will need to be 
+# passed through the command line to run the code:
+
+#./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 10 -in ./script.restart.read.ic.wiggle 
+
+# All questions regarding this script send to c.kawamura@me.com
+###############################################
+
+###############################################
+# Re-Defined if friction is on or off. Needed
+# to read th correct restart file.
+###############################################
+if "${fric} == 1" then &
+	"variable friction_status string Friction_ON" &
+else & 
+	"variable friction_status string Friction_OFF"
+
+###############################################
+# Load restart file where last simulation left off.
+# Read_restart will first read a filename where “%” 
+# is replaced by “base”.
+# Read_restart then reads the additional files. 
+###############################################
+read_restart ./restart.IC.${friction_status}.pressure_${P}.%
+reset_timestep 0
+
+###############################################
+# VARIABLES
+# Restart files do not save variables from 
+# original simulation.
+###############################################
+variable	PER equal 1/${FREQ}
+variable	d_ave equal 1
+variable	density equal 1
+variable	PI equal 3.141592653589
+variable	mass_particle equal ${density}*4/3*${PI}*(${d_ave}/2)^3
+variable	e_n equal .10 #restiution coefficient
+variable	kn equal 100
+variable	meff equal ${mass_particle}^2/(2*${mass_particle}) #From J.Shafer, under equation 1
+variable	t_n equal sqrt(${meff}/${kn}*(1/${PI}^2+(ln(${e_n}/${meff})^2)))
+variable	gamma_n equal -2*ln(${e_n})/${t_n}
+variable	xmu equal 0.01
+variable	dampflag equal 1 #1 on, 0 off
+variable    kt equal ${kn}*2/7
+variable    gamma_t equal ${gamma_n}*0.5
+variable	tcol equal 2*${PI}/sqrt(2*${kn}/${meff})
+variable	dt equal ${tcol}*0.0001 # 1e-5
+timestep 	${dt}
+variable	time equal step*dt
+variable	dimensionless_p equal ${P}*${d_ave}/${kn}
+
+###############################################
+# ENVIRONMENT
+# Restart files do not save neighbor info from 
+# original simulation.
+###############################################
+neigh_modify	delay 100 every 100 check yes
+neigh_modify	exclude type 2 2
+neigh_modify	exclude type 3 3
+neigh_modify	exclude type 2 3
+
+###############################################
+# GROUPS
+###############################################
+region probe_region cylinder z 0 0 .5 -2 EDGE units box
+group probes region probe_region 
+
+###############################################
+# PAIR STYLES
+###############################################
+if "${fric} == 1" then & 
+	"pair_style gran/hooke/history ${kn} ${kt} ${gamma_n} ${gamma_t} ${xmu} ${dampflag}" &
+else & 
+	"pair_style	gran/hooke/history ${kn} ${kt} ${gamma_n} ${gamma_t} 0 ${dampflag}" 
+pair_coeff	* *
+
+###############################################
+# COMPUTES
+###############################################
+compute 	mobile all erotate/sphere #Rotational KE of group of spherical particles, 1/2 Iw^2
+compute 	t1 all temp/sphere #Rot AND Translational temp of group of sphere parts
+compute 	1 flow group/group upper #Total energy and force interaction between flow and upper groups
+compute 	2 upper group/group flow #Same as ^ but between opper and flow
+compute 	myPress flow stress/atom NULL virial #Per-atom stress tensor for FLOW group
+compute 	4 upper group/group flow # Total energy and force interaction between upper and flow
+compute 	5 all temp
+
+###############################################
+# ON SCREEN INFORMATION
+###############################################
+fix extra all print 100  	"""
+****************************************************************************
+*** Current Simulation is Oscillation with parameters:
+*** ${friction_status} 
+*** Pressure = ${P} 
+*** Dimensionless Pressure = ${dimensionless_p} 
+*** Vibration Amplitude = ${AMP} 
+*** Vibration Frequency = ${FREQ} 
+*** Time = ${time}
+*** dt = ${dt}
+*** kn = ${kn}
+*** kt = ${kt}
+*** gamma_n = ${gamma_n}
+*** gamma_t = ${gamma_t}
+****************************************************************************
+"""
+
+###############################################
+# EXPERIMENTAL
+###############################################
+
+
+
+###############################################
+# FIXES
+###############################################
+fix 		allow_flow_movement flow nve/sphere
+# fix 		allow_upper_movement upper move linear 0.0 0.0 NULL 
+# fix		force_upper_movement upper aveforce 0.0 0.0 -$P
+fix 		wiggle_lower lower move wiggle 0 0 ${AMP} ${PER}
+fix 		apply_viscous all viscous 1
+
+###############################################
+# THERMODYNAMIC PARAMETERS
+###############################################
+thermo_style	custom step atoms ke vol
+thermo			10000						
+thermo_modify 	temp t1
+thermo_modify	lost ignore norm no
+compute_modify	thermo_temp dynamic/dof yes
+
+###############################################
+# OUTPUTS
+###############################################
+dump movie_system all movie 100 ./movie.wiggle.full_system.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+dump movie_probes probes movie 100 ./movie.wiggle.probes.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+dump VMD_probes probes xyz 100 VMD_out.wiggle.probes.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.xyz
+dump yaml_probes probes yaml 100 dump_probes.yaml id type x y z
+dump yaml_lower lower yaml 100 dump_lower.yaml id type x y z
+dump_modify yaml_probes format line "%d %d %.20f %.20f %.20f"
+
+###############################################
+# RUN
+###############################################
+
+fix haltcriteria all halt 1 v_time > 5
+run 		100000000
+print "ALL DONE"
+
+###############################################
+# RECYCLING BIN
+###############################################
+
+###############################################
+# Single out and watch a particle
+# ###############################################
+# group stuck_atom id 47
+# dump movie_stuck_atom stuck_atom movie 100 ./movie_stuck_atom.mp4 type type zoom 2.0 adiam 1.5 size 1280 720
+
+###############################################
+# Compute distance between top and bottom wall COM
+# Need to compute AFTER run, looking for different solution
+# ###############################################
+# compute upper_wall_com upper com
+# variable upper_wall_com_z equal c_upper_wall_com[3]
+# compute lower_wall_com lower com
+# variable lower_wall_com_z equal c_lower_wall_com[3]
+# variable L equal ${upper_wall_com_z}-${lower_wall_com_z}
+
+###############################################
+# compute top probe max displacement and set to
+# variable for "fix halt" criteria
+# ###############################################
+# compute top_displace top_probe displace/atom #Outputs a per-atom vector of displacement
+# compute max_disp_top top_probe reduce max c_top_displace[4] #Picks out the highest value of displacement at teach timestep and sets equal to plain vector
+# variable current_top_maxdisp equal c_max_disp_top
+
+###############################################
+# Compute the maximum displacement for all probes
+###############################################
+# compute displace probes displace/atom
+# dump dump_max_probe_disp probes custom 100 dump_max_probe_disp.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.txt id type c_displace[4]
+

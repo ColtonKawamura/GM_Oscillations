@@ -1,0 +1,232 @@
+
+###############################################
+# The purpose of this script is to initialize condtions 
+# for spring and dashpot forces for particles in a box.
+
+# This creates a periodic boundry on sides and shrink wrapped
+# on sides then compresses that until an energy minimum is found.
+
+# Output is a "restart" file with the that can be used to
+# for other simulations and a movie showing the compression.
+
+# The following variables will need to be 
+# passed through the command line to run the code:
+
+#./lmp -var fric 1 -var AMP 0 -var FREQ 0.1 -var P 10 -in ./script.IC.read.compress
+
+# All questions regarding this script send to c.kawamura@me.com.
+###############################################
+
+
+
+###############################################
+# ENVIRONMENT
+###############################################
+units 		lj			# "Units" definition is meaningless, only dimensionless numbers matter
+atom_style	sphere		# "shere" is used for granular models
+boundary	p p s		#(x y z); p= periodic on sides, shrink-wrapped on sides
+newton		off 		# "off" turns off newton's third law, for savings in computation. If two interacting atoms are on two processors, both processors compute interaction and resulting force but not communicated.
+comm_modify	vel yes		# "vel yes" communicates velocity info with ghost (atoms that lie within the cuttoff distance of periodic boundary)
+neighbor	0.3 bin 	# Size of "skin" for neighbor lists
+
+###############################################
+# VARIABLES
+###############################################
+variable	PER equal 1/${FREQ}
+variable	d_ave equal 1
+variable	density equal 1
+variable	PI equal 3.141592653589
+variable	mass_particle equal ${density}*4/3*${PI}*(${d_ave}/2)^3
+variable	e_n equal .10 #restiution coefficient
+variable	kn equal 100
+variable	meff equal ${mass_particle}^2/(2*${mass_particle}) #From J.Shafer, under equation 1
+variable	t_n equal sqrt(${meff}/${kn}*(1/${PI}^2+(ln(${e_n}/${meff})^2)))
+variable	gamma_n equal -2*ln(${e_n})/${t_n}
+variable	xmu equal 0.01
+variable	dampflag equal 1 #1 on, 0 off
+variable    kt equal ${kn}*2/7
+variable    gamma_t equal ${gamma_n}*0.5
+variable	tcol equal 2*${PI}/sqrt(2*${kn}/${meff})
+variable	dt equal ${tcol}*0.0001 # 1e-5
+timestep 	${dt}
+variable	time equal step*dt
+variable	dimensionless_p equal ${P}*${d_ave}/${kn}
+
+if "${fric} == 1" then & 
+	"variable friction_status string Friction_ON" &
+else & 
+	"variable friction_status string Friction_OFF"
+
+########### TIME STEPS TO DELAY FOR THE N^2 BUILD ################
+neigh_modify	delay 100 every 100 check yes
+neigh_modify	exclude type 2 2
+neigh_modify	exclude type 3 3
+neigh_modify	exclude type 2 3
+#neigh_modify	delay 5
+
+###############################################
+# Read a data file of particle positions
+###############################################
+read_data	./data_ICN10000W7.granular
+
+###############################################
+# GROUPS
+###############################################
+group		lower type 2 	
+group		upper type 3 	
+group		flow type 1 	
+
+###############################################
+# PAIR STYLES
+###############################################
+if "${fric} == 1" then & 
+	"pair_style gran/hooke/history ${kn} ${kt} ${gamma_n} ${gamma_t} ${xmu} ${dampflag}" &
+else & 
+	"pair_style	gran/hooke/history ${kn} ${kt} ${gamma_n} ${gamma_t} 0 ${dampflag}" 
+pair_coeff	* *
+
+###############################################
+# COMPUTES
+###############################################
+compute 	mobile all erotate/sphere #Rotational KE of group of spherical particles, 1/2 Iw^2
+compute 	t1 all temp/sphere #Rot AND Translational temp of group of sphere parts
+compute 	1 flow group/group upper #Total energy and force interaction between flow and upper groups
+compute 	2 upper group/group flow #Same as ^ but between opper and flow
+compute 	myPress flow stress/atom NULL virial #Per-atom stress tensor for FLOW group
+#compute 3 flow reduce ave c_myPress[*]
+compute 	4 upper group/group flow # Total energy and force interaction between upper and flow
+compute 	5 all temp
+
+###############################################
+# ON SCREEN INFORMATION
+###############################################
+fix extra all print 10005  	"""
+****************************************************************************
+*** Current Simulation is Initial Conditions PHASE I with parameters: 
+*** ${friction_status} 
+*** Pressure = ${P} 
+*** Dimensionless Pressure = ${dimensionless_p} 
+*** Vibration Amplitude = ${AMP} 
+*** Vibration Frequency = ${FREQ} 
+*** Time = ${time}
+*** dt = ${dt}
+*** kn = ${kn}
+*** kt = ${kt}
+*** gamma_n = ${gamma_n}
+*** gamma_t = ${gamma_t}
+****************************************************************************
+"""
+
+###############################################
+# FIXES
+###############################################
+fix 		allow_flow_movement flow nve/sphere
+fix 		allow_upper_movement upper move linear 0.0 0.0 NULL
+fix			force_upper_movement upper aveforce 0.0 0.0 -10
+fix 		wiggle_lower lower move wiggle 0 0 0 ${PER}
+fix 		apply_viscous all viscous 0.01
+
+###############################################
+# THERMODYNAMIC PARAMETERS
+###############################################
+thermo_style	custom step atoms ke vol
+thermo			10000
+thermo_modify 	temp t1
+thermo_modify	lost ignore norm no
+compute_modify	thermo_temp dynamic/dof yes 
+
+###############################################
+# EXPERIMENTAL
+###############################################
+variable ke equal ke
+
+###############################################
+# OUTPUTS
+###############################################
+dump movie_system all movie 10000 ./movie.IC.${friction_status}.Pressure_${P}.mp4 type type zoom 2.0 adiam 1.5 size 1280 720
+dump gif_system all movie 10000 ./movie.IC.${friction_status}.Pressure_${P}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+
+###############################################
+# RUN
+##############################################
+variable ke equal ke
+fix long_ave all ave/time 10 100 1000 v_ke ave window 5 #100,200,300,400...1000. Output on step 10K will be average of values on steps 5K , 6K,..., 10K
+fix short_ave all ave/time 10 100 1000 v_ke
+
+label 		loop
+variable 	Loop_Count loop 10000
+run 		10000
+variable diffke equal abs(f_long_ave-f_short_ave)
+if "${diffke} <= 0.00000001" then "jump SELF break"
+next Loop_Count
+jump SELF loop
+label break
+
+unfix 		force_upper_movement
+fix			new_force_upper_movement upper aveforce 0.0 0.0 -${P}
+unfix 		extra
+fix new_extra all print 10005  	"""
+****************************************************************************
+*** Current Simulation is Initial Conditions PHASE II with parameters: 
+*** ${friction_status} 
+*** Pressure = ${P} 
+*** Dimensionless Pressure = ${dimensionless_p} 
+*** Vibration Amplitude = ${AMP} 
+*** Vibration Frequency = ${FREQ} 
+*** Time = ${time}
+*** dt = ${dt}
+*** kn = ${kn}
+*** kt = ${kt}
+*** gamma_n = ${gamma_n}
+*** gamma_t = ${gamma_t}
+****************************************************************************
+"""
+print "Increasing Pressure"
+
+run 5000 post no
+variable diffke equal abs(f_long_ave-f_short_ave)
+fix halt_if_converged all halt 1000 v_diffke <= 0.00000000001
+run 1000000000
+
+print "ALL DONE"
+
+###############################################
+# RESTART OUTPUT
+###############################################
+
+write_restart ./restart.IC.${friction_status}.pressure_${P}.% 
+
+###############################################
+# RECYCLING BIN
+###############################################
+# variable 	myTemp equal temp
+# label 		loop
+# variable 	Loop_Count loop 10000
+# run 		10000
+# if "${myTemp} < 100000000000000000000" then "jump SELF break"
+# next Loop_Count
+# jump SELF loop
+# label break
+
+# print 	"*****************"
+# print 	"SWITCHING TO GUNS"
+# print 	"*****************"
+# fix 	8 all viscous 1 #this increases the viscous force of all atoms
+
+# label	 loop2
+# variable Loop_Count2 loop 10000
+# run 	10000
+# if "${myTemp} < 100000" then "jump SELF break2"
+# next Loop_Count2
+# jump SELF loop2
+# label break2
+
+# variable 	E equal 1000     #Young Modulus aka k constant:
+# variable	coeffRes equal 0.2
+# variable	EYoung equal $E 
+# variable 	Poisson equal 2.0/7.0 #v = Poissons ratio = "squishyness"
+# variable	GShear equal ${EYoung}/(2*(1+${Poisson})) #G = Shear Modulus 
+# variable	reff equal 1
+# variable    kt equal 4.0*${GShear}/(2-${Poisson})
+# variable	a equal (-2.0*log(${e_n})/${PI})^2
+# variable    gamma_t equal ${gamma_n}*0.5

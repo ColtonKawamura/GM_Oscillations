@@ -1,0 +1,87 @@
+
+###############################################
+# The purpose of this script is to submit a LAMMPS
+# job to HAMMING.
+
+#USAGE:
+# in put the following into command line:
+# sh this_filename.sh
+
+# All questions regarding this script send to c.kawamura@me.com
+###############################################
+
+
+###############################################
+# HAMMING specific parameters
+###############################################
+
+#!/bin/bash
+#SBATCH --job-name=VibShear7
+#SBATCH --array=1-198
+#SBATCH --nodes=1
+#SBATCH --ntasks=4
+#SBATCH --constraint=epyc
+#SBATCH --cpus-per-task=1
+#SBATCH --time=24:00:00
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=c.kawamura@me.com
+#SBATCH -o VibShear7.out
+#SBATCH --mem-per-cpu=4000
+
+
+###############################################
+# Source aliases and libraries
+###############################################
+
+#source /etc/profile
+#source ~/.bashrc
+
+###############################################
+# Load LAMMPS and MPI for calculations
+###############################################
+
+#module load /share/spack/modules/linux-centos7-x86_64/gcc-7.2.0/lammps-20200109-ti6
+#module load /share/spack/modules/linux-centos7-x86_64/gcc-7.2.0/openmpi-2.1.2-owp
+
+###############################################
+# Run initial calculations WITHOUT shear friction 
+# and save restart
+###############################################
+
+# ./lmp -var fric 1 -var AMP 0 -var FREQ 0.1 -var P 0.1 -in ./script.IC.read.compress
+#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.05 -in ./script.IC.read.compress
+#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.02 -in ./script.IC.read.compress
+#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.01 -in ./script.IC.read.compress
+#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.005 -in ./script.IC.read.compress
+#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.002 -in ./script.IC.read.compress
+#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.001 -in ./script.IC.read.compress
+
+###############################################
+# Run initial calculations WITH shear friction 
+# and save restart
+###############################################
+
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.1 -in ./script.IC.read.compress
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.05 -in ./script.IC.read.compress
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.02 -in ./script.IC.read.compress
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.01 -in ./script.IC.read.compress
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.005 -in ./script.IC.read.compress
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.002 -in ./script.IC.read.compress
+#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.001 -in ./script.IC.read.compress
+
+###############################################
+# Use output "restart" file from above and 
+# wiggle (vibrate) the bottom face with different
+# frequencies and amplitudes.
+###############################################
+
+./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 0.1 -in ./script.restart.read.ic.wiggle 
+./lmp -var fric 1 -var AMP 0.1 -var FREQ 0.01 -var P 0.1 -in ./script.restart.read.ic.wiggle 
+./lmp -var fric 1 -var AMP 0.1 -var FREQ 0.001 -var P 0.1 -in ./script.restart.read.ic.wiggle 
+
+# sh attentuation_data_extract.sh
+sh multiple_attenuation_data_extract.sh
+
+#./lmp -var AMP 0 -var FREQ 2.0 -var K 1 -var P .02 -in ./onlyrestart
+
+#./lmp -var AMP 0 -var FREQ 2.0 -var K 1 -var P .01 -in ./onlyrestart

@@ -1,0 +1,9 @@
+/.DS_Store
+/CMakeCache.txt
+/CMakeFiles
+/Makefile
+/etc
+/includes
+/liblammps.a
+/lmp
+/styles
