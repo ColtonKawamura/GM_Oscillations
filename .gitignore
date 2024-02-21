@@ -8,5 +8,6 @@
 /lmp
 /styles
 /cmake_install.cmake
-movie.IC.Friction_ON.Pressure_10.gif
-movie.IC.Friction_ON.Pressure_10.mp4
+*.gif
+*.mp4
+
