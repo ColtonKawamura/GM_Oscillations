@@ -120,76 +120,38 @@ for i = 1:N
     probe_vectors{i} = probe_vector;
 end
 
-% Convert the cell array to a matrix with each column representing a probe vector
-x_all = cell2mat(probe_vectors)
-
+%%%%%%%%%%%%%%%%%%%%
 dt = 8.53793823217796e-06;
-left_wall_list = probe1;
-tvec = step*dt; %Creates a time vector. 
-omega_D = 2*pi*1; %2 pi f
-[~,isort] = sort(x0); %Not needed for mine
-iskip = 1;
-list = [];
-b_start = 0;
-offset_guess = 0;
+time = step*dt;
+initial_amplitude = .001;
+initial_phase_offset = 0;
+driving_frequency = 1;
 
-for nn = isort(1:iskip:end) %iterates through a subset of indices from isort, starting from the first index and incrementing by iskip each time.
-    if(~left_wall_list(nn)) %checks if left_wall_list(nn) is false
-        x_temp = x_all(nn,:); %extracts all elements nn row from the matrix x_all and assigns it to to x_temp
+index_initial_oscillation = find(probe5>probe5(1)+0.5*(max(probe5)-probe5(1)),1,'first')
+fit_x = time(index_initial_oscillation:end);
+fit_y = probe5(index_initial_oscillation:end)-probe5(1);
 
-        if length(unique(x_temp))>100 %checks if the number of unique elements in the vector x_temp is greater than 100
 
-            i0 = find(x_temp>x0(nn)+0.5*(max(x_temp)-x0(nn)),1,'first'); %Gets the first occurence when x rises to .5 max amp
-            X = tvec(i0:end); %Shaves off elements of tvec that occur before x_temp rising to .5 of max value
-            Y = x_temp(i0:end)-x0(nn); %Y = displacement of x
-            yu = max(Y(round(end/2):end)); %Max value in the upper half of Y
-            yl = min(Y(round(end/2):end)); %Min value in the upper half of Y
-            yr = (yu-yl);                               % Range of ‘y’ in the upper part
-            yz = Y-yu+(yr/2); %Centers the data around zero after the max value subtracted
-            zx = X(yz .* circshift(yz,[0 1]) <= 0);     % Find zero-crossings
-            per = 2*mean(diff(zx));                     % Estimate period
-            w_guess = 2*pi/per;
-            ym = mean(Y((round(end/2):end)));                              % Estimate offset
-            fit = @(b,X)  b(1).*(sin(w_D*X - b(2)));    % Function to fit
-            fcn = @(b) sum((fit(b,X) - Y).^2);                              % Least-Squares cost function
-            [s fval exitflag] = fminsearch(fcn, [yr/2;  offset_guess]);                    % Minimize Least-Squares
-            [R P] = corrcoef(fit(s,X),Y);
-            R2 = R.*R;
-            
-            % if x0(nn) > 500
-            %     'hello'
-            % end
-            % 
-            % if s(1) > A/100
-                list = [list;[x0(nn),s(1),s(2),R2(2),(X(2)-X(1)).*length(X)/per]];
-            % end
-            offset_guess = s(2);
-            xp = X;% linspace(min(X),max(X));
-            figure(1)
-            plot(X,Y,'bo',  xp,fit(s,xp), 'k--')
-            drawnow
-            % fo = fitoptions('Method','NonlinearLeastSquares',...
-            %     'Lower',[0,-inf,omega_D*0.999,x0(nn)*0.999],...
-            %     'Upper',[2*A,inf,omega_D*1.001,x0(nn)*1.001],...
-            %     'StartPoint',[(max(x_temp(end-100:end))-x0(nn)) b_start omega_D x0(nn)]);
-            % ft = fittype('a*sin(b-c*x)+d','options',fo);
-            % 
-            % if i0+4<length(x_temp)
-            %     [curve2,gof2] = fit(tvec(i0:end)',x_temp(i0:end)',ft);
-            %     if gof2.rsquare > 0.8 && curve2.a > A/100
-            %         b_start = curve2.b;
-            %         list = [list;[x0(nn),curve2.a,curve2.b]];
-            %     end
-            % end
-        end
-    end
-
-end
-
-%%%% This is the start %%%
-fit = @(b, X) b(1) .* sin(w_D * X - b(2)); % Function to fit
-fcn = @(b) sum((fit(b, step) - probe1).^2); % Least-Squares cost function
+fit = @(b, X) b(1) .* sin(2*pi*driving_frequency * X - b(2)); % Function to fit
+fcn = @(b) sum((fit(b, fit_x) - fit_y).^2); % Least-Squares cost function
 initial_guess = [initial_amplitude; initial_phase_offset];
 [s, fval, exitflag] = fminsearch(fcn, initial_guess);
-[R, P] = corrcoef(fit(s, step), probe1);
+[R, P] = corrcoef(fit(s, fit_x), fit_y);
 R2 = R.^2;
+
+% Define your model function using the fitted parameters
+model_function = @(b, X) b(1) .* sin(2*pi*driving_frequency  * X - b(2));
+
+% Generate model predictions using the fitted parameters
+fitted_data = model_function(s, fit_x);
+
+% Plot original data and fitted data
+figure;
+plot(fit_x, fit_y, 'b.', 'DisplayName', 'Original Data'); % Plot original data as blue dots
+hold on;
+plot(fit_x, fitted_data, 'r-', 'DisplayName', 'Fitted Data'); % Plot fitted data as a red line
+xlabel('Time'); % Label x-axis
+ylabel('Probe 5'); % Label y-axis
+title('Fitted Data vs. Original Data'); % Add title
+legend('show'); % Show legend
+hold off;
