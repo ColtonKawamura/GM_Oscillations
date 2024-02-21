@@ -121,7 +121,7 @@ for i = 1:N
 end
 
 %%%%%%%%%%%%%%%%%%%%
-dt = 8.53793823217796e-06;
+dt = 2.27326038544775e-05;
 time = step*dt;
 initial_amplitude = .001;
 initial_phase_offset = 0;
@@ -154,4 +154,27 @@ xlabel('Time'); % Label x-axis
 ylabel('Probe 5'); % Label y-axis
 title('Fitted Data vs. Original Data'); % Add title
 legend('show'); % Show legend
+hold off;
+
+%%%%%%%%%%%%%%%%%%
+
+% Define the equation of the fitted curve
+equation = sprintf('y = %.4f * sin(2*pi*%.4f * x - %.4f)', s(1), driving_frequency, s(2));
+
+% Plot original data and fitted data
+figure;
+plot(fit_x, fit_y, 'b.', 'DisplayName', 'Original Data'); % Plot original data as blue dots
+hold on;
+plot(fit_x, fitted_data, 'r-', 'DisplayName', 'Fitted Data'); % Plot fitted data as a red line
+
+% Add equation text to the legend
+legend('show'); % Show legend
+legend('Original Data', 'Fitted Data'); % Add legend entries
+text_location_x = min(fit_x) + 0.2 * range(fit_x); % Adjust text x-location
+text_location_y = max(fit_y) + 0.05 * range(fit_y); % Adjust text y-location
+text(text_location_x, text_location_y, equation, 'FontSize', 12, 'Color', 'k', 'Interpreter', 'latex'); % Add equation text
+
+xlabel('Time'); % Label x-axis
+ylabel('Probe 5'); % Label y-axis
+title('Fitted Data vs. Original Data'); % Add title
 hold off;
