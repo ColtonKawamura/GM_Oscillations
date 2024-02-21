@@ -8,6 +8,7 @@
 /lmp
 /styles
 /cmake_install.cmake
-*.gif
-*.mp4
-
+/*.gif
+/*.mp4
+goodrestarts/.DS_Store
+goodrestarts/N10KW7/.DS_Store
