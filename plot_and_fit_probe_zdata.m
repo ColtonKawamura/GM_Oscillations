@@ -1,4 +1,4 @@
-function plot_and_fit_probe_zdata(probe_data)
+function plot_and_fit_probe_zdata(probe_number)
 
     % Load the data without the header (Octave specific)
     data = textread('plotdata_probes_zdisp.txt', '', 'headerlines', 1);
@@ -12,7 +12,7 @@ function plot_and_fit_probe_zdata(probe_data)
 
     for i = 1:num_probes
         variable_name = ['probe' num2str(i)];
-        eval([variable_name ' = probe_columns(:, i);']);
+        eval([variable_name ' = real(probe_columns(:, i));']); % Convert to real numbers
     end
 
     % Constants
@@ -21,6 +21,9 @@ function plot_and_fit_probe_zdata(probe_data)
     initial_amplitude = 0.001;
     initial_phase_offset = 0;
     driving_frequency = 1;
+
+    % Get the specified probe data
+    probe_data = eval(['probe' num2str(probe_number)]);
 
     % Find initial oscillation index
     index_initial_oscillation = find(probe_data > probe_data(1) + 0.5 * (max(probe_data) - probe_data(1)), 1, 'first');
@@ -42,8 +45,8 @@ function plot_and_fit_probe_zdata(probe_data)
     [s, ~, ~] = fminsearch(cost_function, initial_guess);
 
     % Calculate correlation coefficient
-    [R, ~] = corrcoef(fit_function(s, fit_x), fit_y);
-    R2 = R^2;
+    % [R, ~] = corrcoef(fit_function(s, fit_x), fit_y);
+    % R2 = R^2;
 
     % Define the model function using the fitted parameters
     model_function = @(b, X) b(1) .* sin(2 * pi * driving_frequency * X - b(2));
@@ -55,7 +58,7 @@ function plot_and_fit_probe_zdata(probe_data)
     equation = sprintf('y = %.4f * sin(2*pi*%.4f * x - %.4f)', s(1), driving_frequency, s(2));
 
     %Save the Amplitude as a variable
-    
+    probe_amplitude = s(1);
 
     % Plot original data and fitted data
     figure;
