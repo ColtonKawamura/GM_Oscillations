@@ -1,4 +1,20 @@
-function plot_and_fit_probe_zdata(probe_data, step)
+function plot_and_fit_probe_zdata(probe_data)
+
+    % Load the data without the header (Octave specific)
+    data = textread('plotdata_probes_zdisp.txt', '', 'headerlines', 1);
+
+    % Extract columns
+    step = data(:, 1);
+    probe_columns = data(:, 2:end);
+
+    % Create variables for each probe
+    num_probes = size(probe_columns, 2);
+
+    for i = 1:num_probes
+        variable_name = ['probe' num2str(i)];
+        eval([variable_name ' = probe_columns(:, i);']);
+    end
+
     % Constants
     dt = 2.27326038544775e-05;
     time = step * dt;
