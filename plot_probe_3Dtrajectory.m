@@ -1,3 +1,4 @@
+%Argument is the probe number "1 or 2, etc", not probeN
 function plot_probe_3Dtrajectory(probe_number)
     % Load x, y, and z data
     x_data = textread('plotdata_probes_xdisp.txt', '', 'headerlines', 1);
