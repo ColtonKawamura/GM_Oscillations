@@ -45,8 +45,8 @@ function plot_and_fit_probe_zdata(probe_number)
     [s, ~, ~] = fminsearch(cost_function, initial_guess);
 
     % Calculate correlation coefficient
-    % [R, ~] = corrcoef(fit_function(s, fit_x), fit_y);
-    % R2 = R^2;
+    [R, ~] = corrcoef(fit_function(s, fit_x), fit_y);
+    R2 = R^2;
 
     % Define the model function using the fitted parameters
     model_function = @(b, X) b(1) .* sin(2 * pi * driving_frequency * X - b(2));
