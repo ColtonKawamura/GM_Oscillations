@@ -1,3 +1,5 @@
+clear all
+
 %Initialize output vectors
 inital_position_vector = [];
 amplitude_vector = [];
@@ -7,7 +9,7 @@ data = textread('plotdata_probes_zdisp.txt', '', 'headerlines', 1);
 
 % Extract columns
 step = data(:, 1);
-probe_columns = data(:, 2:end);
+probe_columns = data(:, 3:end); %changed this from the 2nd column to 3rd because 1st probe breaks corrcoef and is a bottomwall group
 
 % Create variables for each probe
 num_probes = size(probe_columns, 2);
