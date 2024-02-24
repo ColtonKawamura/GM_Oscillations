@@ -1,4 +1,5 @@
 clear all
+close all
 
 %Initialize output vectors
 inital_position_vector = [];
@@ -57,8 +58,10 @@ for probe_number = 1:num_probes
     end
 end
 
-% Display or further process the vectors as needed
-disp('Initial position vector:');
-disp(inital_position_vector);
-disp('Amplitude vector:');
-disp(amplitude_vector);
+figure;
+    plot(inital_position_vector, amplitude_vector, 'b.')
+    xlabel('Distance');
+    ylabel('Probe Oscilation Amplitude');
+    title('Attentuation of Oscillation in Probes', 'FontSize', 16);
+    legend(cellstr(num2str([varargin{:}]')), 'Location', 'best');
+    grid on;
