@@ -30,7 +30,7 @@ function plot_mult_probe_zdisp(varargin)
     % Customize labels and title
     xlabel('Step');
     ylabel('Displacement');
-    title('Trajectories of Selected Probes');
+    title('Z-Trajectories of Selected Probes', 'FontSize', 16);
     legend(cellstr(num2str([varargin{:}]')), 'Location', 'best');
     grid on;
     
