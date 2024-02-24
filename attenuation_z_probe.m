@@ -71,3 +71,5 @@ ylabel('Probe Oscillation Amplitude');
 title('Attenuation of Oscillation in Probes', 'FontSize', 16);
 legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
 grid on;
+
+plot_mult_probe_zdisp(valid_probe_numbers)
