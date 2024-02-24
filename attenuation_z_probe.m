@@ -1,9 +1,10 @@
 clear all
 close all
 
-%Initialize output vectors
+% Initialize output vectors
 initial_position_vector = [];
 amplitude_vector = [];
+valid_probe_numbers = [];
 
 % Load the data without the header (Octave specific)
 data = textread('plotdata_probes_zdisp.txt', '', 'headerlines', 1);
@@ -53,9 +54,10 @@ for probe_number = 1:num_probes
         if R2 < 0.5
             disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', stopping further processing.']);
         else
-            % If good, store the vector
+            % If good, store the vector and probe number
             initial_position_vector = [initial_position_vector, probe_data(1)];
             amplitude_vector = [amplitude_vector, s(1)];
+            valid_probe_numbers = [valid_probe_numbers, probe_number];
         end
     catch
         disp(['Error occurred for probe ' num2str(probe_number) ', continuing with the next probe.']);
@@ -67,6 +69,5 @@ plot(initial_position_vector, amplitude_vector, 'b.')
 xlabel('Distance');
 ylabel('Probe Oscillation Amplitude');
 title('Attenuation of Oscillation in Probes', 'FontSize', 16);
-legend(cellstr(num2str([1:num_probes]')), 'Location', 'best'); % Assuming you want probe numbers as legend entries
+legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
 grid on;
-
