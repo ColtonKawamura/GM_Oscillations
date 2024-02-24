@@ -65,7 +65,7 @@ for probe_number = 1:num_probes
 end
 
 figure;
-plot(initial_position_vector, amplitude_vector, 'b.')
+plot(initial_position_vector, abs(amplitude_vector), 'bo')
 xlabel('Distance');
 ylabel('Probe Oscillation Amplitude');
 title('Attenuation of Oscillation in Probes', 'FontSize', 16);
