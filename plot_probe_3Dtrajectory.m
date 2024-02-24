@@ -17,7 +17,7 @@ function plot_probe_3Dtrajectory(probe_number)
     xlabel('X Position');
     ylabel('Y Position');
     zlabel('Z Position');
-    title(['Trajectory of Probe ' num2str(probe_number)]);
+    title(['Trajectory of Probe ' num2str(probe_number)],'FontSize', 16);
     grid on;
 end
 
