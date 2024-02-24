@@ -2,7 +2,7 @@ clear all
 close all
 
 %Initialize output vectors
-inital_position_vector = [];
+initial_position_vector = [];
 amplitude_vector = [];
 
 % Load the data without the header (Octave specific)
@@ -54,7 +54,7 @@ for probe_number = 1:num_probes
             disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', stopping further processing.']);
         else
             % If good, store the vector
-            inital_position_vector = [inital_position_vector, probe_data(1)];
+            initial_position_vector = [initial_position_vector, probe_data(1)];
             amplitude_vector = [amplitude_vector, s(1)];
         end
     catch
@@ -63,9 +63,10 @@ for probe_number = 1:num_probes
 end
 
 figure;
-plot(inital_position_vector, amplitude_vector, 'b.')
+plot(initial_position_vector, amplitude_vector, 'b.')
 xlabel('Distance');
 ylabel('Probe Oscillation Amplitude');
 title('Attenuation of Oscillation in Probes', 'FontSize', 16);
 legend(cellstr(num2str([1:num_probes]')), 'Location', 'best'); % Assuming you want probe numbers as legend entries
 grid on;
+
