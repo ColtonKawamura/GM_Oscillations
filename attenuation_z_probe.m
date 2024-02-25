@@ -64,12 +64,54 @@ for probe_number = 1:num_probes
     end
 end
 
-figure;
-plot(initial_position_vector, abs(amplitude_vector), 'bo')
-xlabel('Distance');
-ylabel('Probe Oscillation Amplitude');
-title('Attenuation of Oscillation in Probes', 'FontSize', 16);
-legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
-grid on;
+%Regular Plot
+% figure;
+% plot(initial_position_vector, abs(amplitude_vector), 'bo')
+% xlabel('Distance');
+% ylabel('Probe Oscillation Amplitude');
+% title('Attenuation of Oscillation in Probes', 'FontSize', 16);
+% legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
+% grid on;
 
 plot_mult_probe_zdisp(valid_probe_numbers)
+
+
+% %%%Loglog Plot
+% figure;
+% loglog(initial_position_vector, abs(amplitude_vector), 'bo')
+% xlabel('Distance');
+% ylabel('Probe Oscillation Amplitude');
+% title('Attenuation of Oscillation in Probes', 'FontSize', 16);
+% legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
+% grid on;
+
+% Perform linear fit
+coefficients = polyfit(log(initial_position_vector), log(abs(amplitude_vector)), 1);
+
+% Extract slope and intercept
+slope = coefficients(1);
+intercept = coefficients(2);
+
+% Create a linear fit line
+fit_line = exp(intercept) * initial_position_vector.^slope;
+
+% Convert coefficients to string
+equation_str = sprintf('y = %.4f * exp(%.4f)', exp(intercept), slope);
+
+% Plot original data and linear fit
+figure;
+loglog(initial_position_vector, abs(amplitude_vector), 'bo', 'DisplayName', 'Data');
+hold on;
+loglog(initial_position_vector, fit_line, 'r-', 'DisplayName', 'Linear Fit');
+xlabel('Distance');
+ylabel('Probe Oscillation Amplitude');
+title('Linear Fit of Attenuation of Oscillation in Probes', 'FontSize', 16);
+legend('show');
+grid on;
+
+
+% Add equation text to the plot
+text_location_x = max(initial_position_vector);
+text_location_y = max(abs(amplitude_vector));
+text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k');
+hold off;
