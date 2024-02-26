@@ -25,15 +25,15 @@ function fft_data(probe_number)
     % Get the specified probe data
     probe_data = eval(['probe' num2str(probe_number)]);
 
-    t = time;
-    Cl = probe_data;
-    Ts = mean(diff(t));
-    Fs = 1/Ts;
-    Fn = Fs/2;
-    L = numel(t);
-    Clm = Cl-mean(Cl);                                  % Subtract Mean (Mean = 0 Hz)
-    FCl = fft(Clm)/L;
-    Fv = linspace(0, 1, fix(L/2)+1)*Fn;
+
+    probe_data = probe_data;
+    average_dt = mean(diff(time));
+    sampling_freq = 1/average_dt;
+    Fn = sampling_freq/2; % Nyquist frequency 
+    number_elements_time = numel(time);
+    Clm = probe_data-mean(probe_data);                                  % Subtract Mean (Mean = 0 Hz)
+    FCl = fft(Clm)/number_elements_time;
+    Fv = linspace(0, 1, fix(number_elements_time/2)+1)*Fn;
     Iv = 1:numel(Fv);
 
     [max_val, idx_max] = max(abs(FCl(Iv)) * 2)
