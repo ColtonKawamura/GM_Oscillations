@@ -60,7 +60,7 @@ for probe_number = 1:num_probes
             valid_probe_numbers = [valid_probe_numbers, probe_number];
         end
     catch
-        disp(['Error occurred for probe ' num2str(probe_number) ', continuing with the next probe.']);
+        disp(['R^2 too low for probe ' num2str(probe_number) ', continuing with the next probe.']);
     end
 end
 
