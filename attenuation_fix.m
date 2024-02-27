@@ -158,3 +158,19 @@ text_location_x = max(initial_position_vector);
 text_location_y = max(abs(amplitude_vector));
 text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k');
 hold off;
+
+%%%% Export
+% Load existing data from test.txt if it exists
+if exist('attenuation_data.txt', 'file') == 2
+    existing_data = dlmread('attenuation_data.txt');
+else
+    existing_data = [];
+end
+
+attenuation = abs(slope);
+% Append the new data to the existing data
+new_data = [driving_frequency, attenuation];
+combined_data = [existing_data; new_data];
+
+% Write the combined data to test.txt
+dlmwrite('attenuation_data.txt', combined_data);
