@@ -52,7 +52,7 @@ for probe_number = 1:num_probes
 
         % Check if R2 is less than 0.5
         if R2 < 0.5
-            disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', stopping further processing.']);
+            disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', continuing with the next probe.']);
         else
             % If good, store the vector and probe number
             initial_position_vector = [initial_position_vector, probe_data(1)];
@@ -60,7 +60,7 @@ for probe_number = 1:num_probes
             valid_probe_numbers = [valid_probe_numbers, probe_number];
         end
     catch
-        disp(['R^2 too low for probe ' num2str(probe_number) ', continuing with the next probe.']);
+        disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', continuing with the next probe.']);
     end
 end
 
