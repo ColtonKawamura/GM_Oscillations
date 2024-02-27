@@ -52,7 +52,8 @@ variable	dampflag equal 1 #1 on, 0 off
 variable    kt equal ${kn}*2/7
 variable    gamma_t equal ${gamma_n}*0.5
 variable	tcol equal 2*${PI}/sqrt(2*${kn}/${meff})
-variable	dt equal ${tcol}*0.0001 # 1e-5
+# variable	dt equal ${tcol}*0.0001 # 1e-5
+variable	dt equal 1e-5
 timestep 	${dt}
 variable	time equal step*dt
 variable	dimensionless_p equal ${P}*${d_ave}/${kn}
