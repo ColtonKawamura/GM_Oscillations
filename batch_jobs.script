@@ -86,3 +86,4 @@ octave -q attenuation_fix.m
 octave -q attenuation_fix.m 
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ .0001 -var P 10 -in ./script.restart.read.ic.wiggle 
 octave -q attenuation_fix.m 
+octave -q plot_attenuation_freq.m
