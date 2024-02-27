@@ -148,6 +148,7 @@ dump yaml_probes probes yaml 100 dump_probes.yaml id type x y z
 dump yaml_lower lower yaml 100 dump_lower.yaml id type x y z
 dump_modify yaml_probes format line "%d %d %.20f %.20f %.20f"
 print dt=${dt} file test.txt
+print frequency=${FREQ} append test.txt screen no
 
 ###############################################
 # RUN
