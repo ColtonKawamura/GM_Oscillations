@@ -15,3 +15,10 @@ goodrestarts/N10KW7/.DS_Store
 VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_.001.amp_0.001.xyz
 VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_.01.amp_0.001.xyz
 VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_.1.amp_0.001.xyz
+linear_fit_plot_freq_0.0001.png
+linear_fit_plot_freq_1.png
+mult_probe_zdisp_freq_0.0001.png
+VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_.0001.amp_0.001.xyz
+VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_1.amp_0.001.xyz
+log.lammps
+log.lammps
