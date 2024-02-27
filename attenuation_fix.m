@@ -1,6 +1,10 @@
 clear all
 close all
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load the data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Initialize output vectors
 initial_position_vector = [];
 amplitude_vector = [];
@@ -109,21 +113,11 @@ for probe_number = 1:num_probes
     end
 end
 
-%Regular Plot
-% figure;
-% plot(initial_position_vector, abs(amplitude_vector), 'bo')
-% xlabel('Distance');
-% ylabel('Probe Oscillation Amplitude');
-% title('Attenuation of Oscillation in Probes', 'FontSize', 16);
-% legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
-% grid on;
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot all the probes that had
 % met the criteria
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 plot_mult_probe_zdisp(valid_probe_numbers)
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Semi log plot (because exponential)
