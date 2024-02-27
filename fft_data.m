@@ -42,6 +42,26 @@ function fft_data(probe_number)
 
     % Find the index of the frequency closest to 1
     desired_frequency = 1;
+
+        % Find the indices corresponding to the desired frequency
+    idx_desired = find(freq_vector == desired_frequency);
+
+    % Check if there is a peak around the desired frequency
+    if idx_desired > 1 && idx_desired < numel(freq_vector)
+        % Check the slope on both sides of the desired frequency
+        slope_before = normalized_fft_data(idx_desired) - normalized_fft_data(idx_desired - 1);
+        slope_after = normalized_fft_data(idx_desired + 1) - normalized_fft_data(idx_desired);
+        
+        % Check if the slopes have opposite signs
+        if sign(slope_before) ~= sign(slope_after)
+            fprintf('Alert: Peak found around the desired frequency.\n');
+        else
+            fprintf('Alert: No peak found around the desired frequency.\n');
+        end
+    else
+        fprintf('Alert: No peak found around the desired frequency.\n');
+    end
+
     [~, idx_closest] = min(abs(freq_vector - desired_frequency));
 
     % Retrieve the amplitude at the index closest to 1
