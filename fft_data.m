@@ -18,9 +18,6 @@ function fft_data(probe_number)
     % Constants
     dt = 2.27326038544775e-05;
     time = step * dt;
-    initial_amplitude = 0.001;
-    initial_phase_offset = 0;
-    driving_frequency = 1;
 
     % Get the specified probe data
     probe_data = eval(['probe' num2str(probe_number)]);
