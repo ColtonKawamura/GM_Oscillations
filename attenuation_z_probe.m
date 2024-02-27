@@ -20,94 +20,35 @@ num_probes = size(probe_columns, 2);
 % Open the file for reading
 fileID = fopen('meta_data.txt', 'r');
 
-% Read the entire file content
-fileContent = fscanf(fileID, '%c');
+% Initialize variables
+dt = '';
+frequency = '';
+kn = '';
+kt = '';
+gamma_n = '';
+gamma_t = '';
+
+% Read the file line by line
+while ~feof(fileID)
+    line = fgetl(fileID);
+    % Find and extract parameters
+    if ~isempty(strfind(line, 'dt='))
+        dt = line(strfind(line, 'dt=')+3:end);
+    elseif ~isempty(strfind(line, 'frequency='))
+        driving_frequency = line(strfind(line, 'frequency=')+10:end);
+    elseif ~isempty(strfind(line, 'kn='))
+        kn = line(strfind(line, 'kn=')+3:end);
+    elseif ~isempty(strfind(line, 'kt='))
+        kt = line(strfind(line, 'kt=')+3:end);
+    elseif ~isempty(strfind(line, 'gamma_n='))
+        gamma_n = line(strfind(line, 'gamma_n=')+8:end);
+    elseif ~isempty(strfind(line, 'gamma_t='))
+        gamma_t = line(strfind(line, 'gamma_t=')+8:end);
+    end
+end
 
 % Close the file
 fclose(fileID);
-
-% Initialize variables
-dt = NaN;
-frequency = NaN;
-kn = NaN;
-kt = NaN;
-gamma_n = NaN;
-gamma_t = NaN;
-
-% Find and extract values
-% For dt
-startIndex = strfind(fileContent, 'dt=');
-if ~isempty(startIndex)
-    startIndex = startIndex + length('dt=');
-    endIndex = startIndex;
-    while isstrprop(fileContent(endIndex), 'digit') || fileContent(endIndex) == '.'
-        endIndex = endIndex + 1;
-    end
-    dt = str2double(fileContent(startIndex:endIndex-1));
-end
-
-% For frequency
-startIndex = strfind(fileContent, 'frequency=');
-if ~isempty(startIndex)
-    startIndex = startIndex + length('frequency=');
-    endIndex = startIndex;
-    while isstrprop(fileContent(endIndex), 'digit') || fileContent(endIndex) == '.'
-        endIndex = endIndex + 1;
-    end
-    frequency = str2double(fileContent(startIndex:endIndex-1));
-end
-
-% For kn
-startIndex = strfind(fileContent, 'kn=');
-if ~isempty(startIndex)
-    startIndex = startIndex + length('kn=');
-    endIndex = startIndex;
-    while isstrprop(fileContent(endIndex), 'digit') || fileContent(endIndex) == '.'
-        endIndex = endIndex + 1;
-    end
-    kn = str2double(fileContent(startIndex:endIndex-1));
-end
-
-% For kt
-startIndex = strfind(fileContent, 'kt=');
-if ~isempty(startIndex)
-    startIndex = startIndex + length('kt=');
-    endIndex = startIndex;
-    while isstrprop(fileContent(endIndex), 'digit') || fileContent(endIndex) == '.'
-        endIndex = endIndex + 1;
-    end
-    kt = str2double(fileContent(startIndex:endIndex-1));
-end
-
-% For gamma_n
-startIndex = strfind(fileContent, 'gamma_n=');
-if ~isempty(startIndex)
-    startIndex = startIndex + length('gamma_n=');
-    endIndex = startIndex;
-    while isstrprop(fileContent(endIndex), 'digit') || fileContent(endIndex) == '.'
-        endIndex = endIndex + 1;
-    end
-    gamma_n = str2double(fileContent(startIndex:endIndex-1));
-end
-
-% For gamma_t
-startIndex = strfind(fileContent, 'gamma_t=');
-if ~isempty(startIndex)
-    startIndex = startIndex + length('gamma_t=');
-    endIndex = startIndex;
-    while isstrprop(fileContent(endIndex), 'digit') || fileContent(endIndex) == '.'
-        endIndex = endIndex + 1;
-    end
-    gamma_t = str2double(fileContent(startIndex:endIndex-1));
-end
-
-% Display extracted values
-disp(['dt: ' num2str(dt)]);
-disp(['frequency: ' num2str(frequency)]);
-disp(['kn: ' num2str(kn)]);
-disp(['kt: ' num2str(kt)]);
-disp(['gamma_n: ' num2str(gamma_n)]);
-disp(['gamma_t: ' num2str(gamma_t)]);
 
 
 for probe_number = 1:num_probes
