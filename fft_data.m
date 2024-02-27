@@ -43,24 +43,26 @@ function fft_data(probe_number)
     % Find the index of the frequency closest to 1
     desired_frequency = 1;
 
-        % Find the indices corresponding to the desired frequency
-    idx_desired = find(freq_vector == desired_frequency);
+    % Find the index of the closest frequency to the desired frequency
+    [~, idx_desired] = min(abs(freq_vector - desired_frequency));
 
     % Check if there is a peak around the desired frequency
     if idx_desired > 1 && idx_desired < numel(freq_vector)
-        % Check the slope on both sides of the desired frequency
-        slope_before = normalized_fft_data(idx_desired) - normalized_fft_data(idx_desired - 1);
-        slope_after = normalized_fft_data(idx_desired + 1) - normalized_fft_data(idx_desired);
+        % Calculate the sign of the slope before and after the desired frequency
+        sign_slope_before = sign(normalized_fft_data(idx_desired) - normalized_fft_data(idx_desired - 1));
+        sign_slope_after = sign(normalized_fft_data(idx_desired + 1) - normalized_fft_data(idx_desired));
         
-        % Check if the slopes have opposite signs
-        if sign(slope_before) ~= sign(slope_after)
-            fprintf('Alert: Peak found around the desired frequency.\n');
+        % Check if the signs of the slopes are different and if the values on both sides are greater than the value at the desired frequency
+        if sign_slope_before ~= sign_slope_after && normalized_fft_data(idx_desired - 1) < normalized_fft_data(idx_desired) && normalized_fft_data(idx_desired + 1) < normalized_fft_data(idx_desired)
+            fprintf('Peak found around the desired frequency.\n');
         else
-            fprintf('Alert: No peak found around the desired frequency.\n');
+            fprintf('*** Alert: No peak found around the desired frequency. ***\n');
         end
     else
-        fprintf('Alert: No peak found around the desired frequency.\n');
+        fprintf('*** Alert: No peak found around the desired frequency. ***\n');
     end
+
+
 
     [~, idx_closest] = min(abs(freq_vector - desired_frequency));
 
