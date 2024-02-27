@@ -52,8 +52,8 @@ variable	dampflag equal 1 #1 on, 0 off
 variable    kt equal ${kn}*2/7
 variable    gamma_t equal ${gamma_n}*0.5
 variable	tcol equal 2*${PI}/sqrt(2*${kn}/${meff})
-# variable	dt equal ${tcol}*0.0001 # 1e-5
-variable	dt equal 1e-5
+variable	dt equal ${tcol}*0.0001 # 1e-5
+# variable	dt equal 1e-5
 timestep 	${dt}
 variable	time equal step*dt
 variable	dimensionless_p equal ${P}*${d_ave}/${kn}
@@ -147,6 +147,7 @@ dump VMD_probes probes xyz 100 VMD_out.wiggle.probes.${friction_status}.pressure
 dump yaml_probes probes yaml 100 dump_probes.yaml id type x y z
 dump yaml_lower lower yaml 100 dump_lower.yaml id type x y z
 dump_modify yaml_probes format line "%d %d %.20f %.20f %.20f"
+print dt=${dt} file test.txt
 
 ###############################################
 # RUN
