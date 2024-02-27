@@ -169,7 +169,7 @@ end
 
 attenuation = abs(slope);
 % Append the new data to the existing data
-new_data = [driving_frequency, attenuation];
+new_data = [driving_frequency, attenuation,kn,kt,gamma_n,gamma_t];
 combined_data = [existing_data; new_data];
 
 % Write the combined data to test.txt
