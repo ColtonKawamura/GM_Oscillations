@@ -31,11 +31,15 @@ function fft_data(probe_number)
     sampling_freq = 1/average_dt;
     Fn = sampling_freq/2; % Nyquist frequency 
     number_elements_time = numel(time);
-    Clm = probe_data-mean(probe_data);                                  % Subtract Mean (Mean = 0 Hz)
-    FCl = fft(Clm)/number_elements_time;
-    Fv = linspace(0, 1, fix(number_elements_time/2)+1)*Fn;
-    Iv = 1:numel(Fv);
+    centered_data = probe_data-mean(probe_data); %Center the data on zero for mean
+    normalized_fft_data = fft(centered_data)/number_elements_time; 
+    freq_vector = linspace(0, 1, fix(number_elements_time/2)+1)*Fn;
+    index_vector = 1:numel(freq_vector);
 
-    [max_val, idx_max] = max(abs(FCl(Iv)) * 2)
-    corresponding_frequency = Fv(idx_max)
+    % Find the dominant frequency and its amplitude
+    %   Need to double it because when signal is centered, power is
+    %   distributed in both positive and negative. double the abs accounts for this
+    [amplitude, idx_max] = max(abs(normalized_fft_data(index_vector)) * 2);
+    dominant_frequency = freq_vector(idx_max)
+    amplitude
 end
