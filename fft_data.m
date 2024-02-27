@@ -39,4 +39,22 @@ function fft_data(probe_number)
     [amplitude, idx_max] = max(abs(normalized_fft_data(index_vector)) * 2);
     dominant_frequency = freq_vector(idx_max)
     amplitude
+
+    % Find the index of the frequency closest to 1
+    desired_frequency = 1;
+    [~, idx_closest] = min(abs(freq_vector - desired_frequency));
+
+    % Retrieve the amplitude at the index closest to 1
+    closest_frequency = freq_vector(idx_closest)
+    closest_amplitude = abs(normalized_fft_data(idx_closest)) * 2
+
+    figure
+    plot(freq_vector, abs(normalized_fft_data(index_vector)) * 2)
+    grid
+    % Find the width of the peak
+    half_width = (closest_frequency - dominant_frequency) / 2;
+
+    % Set xlim to show both sides of the peak
+    xlim([dominant_frequency - half_width, closest_frequency + half_width])
+
 end
