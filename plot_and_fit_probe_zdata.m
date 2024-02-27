@@ -16,7 +16,7 @@ function plot_and_fit_probe_zdata(probe_number)
     end
 
     % Constants
-    dt = 2.27326038544775e-05;
+    dt = 1e-05;
     time = step * dt;
     initial_amplitude = 0.001;
     initial_phase_offset = 0;

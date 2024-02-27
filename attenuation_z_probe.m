@@ -17,7 +17,7 @@ probe_columns = data(:, 2:end); %changed this from the 2nd column to 3rd because
 num_probes = size(probe_columns, 2);
 
 % Constants
-dt = 2.27326038544775e-05;
+dt = 1e-05;
 driving_frequency = 1;
 
 for probe_number = 1:num_probes
