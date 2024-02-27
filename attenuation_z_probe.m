@@ -86,23 +86,23 @@ plot_mult_probe_zdisp(valid_probe_numbers)
 % grid on;
 
 % Perform linear fit
-coefficients = polyfit(log(initial_position_vector), log(abs(amplitude_vector)), 1);
+coefficients = polyfit(initial_position_vector, log(abs(amplitude_vector)), 1);
 
 % Extract slope and intercept
 slope = coefficients(1);
 intercept = coefficients(2);
 
 % Create a linear fit line
-fit_line = exp(intercept) * initial_position_vector.^slope;
+fit_line = exp(intercept) * exp(initial_position_vector.*slope);
 
 % Convert coefficients to string
 equation_str = sprintf('y = %.4f * exp(%.4f)', exp(intercept), slope);
 
 % Plot original data and linear fit
 figure;
-loglog(initial_position_vector, abs(amplitude_vector), 'bo', 'DisplayName', 'Data');
+semilogy(initial_position_vector, abs(amplitude_vector), 'bo', 'DisplayName', 'Data');
 hold on;
-loglog(initial_position_vector, fit_line, 'r-', 'DisplayName', 'Linear Fit');
+semilogy(initial_position_vector, fit_line, 'r-', 'DisplayName', 'Linear Fit');
 xlabel('Distance');
 ylabel('Probe Oscillation Amplitude');
 title('Linear Fit of Attenuation of Oscillation in Probes', 'FontSize', 16);
