@@ -23,7 +23,9 @@ num_probes = size(probe_columns, 2);
 % Open the file for reading
 fileID = fopen('meta_data.txt', 'r');
 
-% Initialize variables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Pull parameter data from the simulation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dt = NaN;
 driving_frequency = NaN;
 kn = NaN;
@@ -59,10 +61,10 @@ end
 % Close the file
 fclose(fileID);
 
-% Display extracted values
-disp(['dt: ' num2str(dt)]);
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Go through each probe and do
+% a sinusoidal fit.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for probe_number = 1:num_probes
     try
         % Get the specified probe data
@@ -116,17 +118,16 @@ end
 % legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
 % grid on;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plot all the probes that had
+% met the criteria
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 plot_mult_probe_zdisp(valid_probe_numbers)
 
 
-% %%%Loglog Plot
-% figure;
-% loglog(initial_position_vector, abs(amplitude_vector), 'bo')
-% xlabel('Distance');
-% ylabel('Probe Oscillation Amplitude');
-% title('Attenuation of Oscillation in Probes', 'FontSize', 16);
-% legend(cellstr(num2str(valid_probe_numbers')), 'Location', 'best'); % Use valid probe numbers for legend entries
-% grid on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Semi log plot (because exponential)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Perform linear fit
 coefficients = polyfit(initial_position_vector, log(abs(amplitude_vector)), 1);
