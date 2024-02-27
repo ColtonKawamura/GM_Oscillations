@@ -22,3 +22,10 @@ VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_.0001.amp_0.001.xyz
 VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_1.amp_0.001.xyz
 log.lammps
 log.lammps
+VMD_out.wiggle.probes.Friction_ON.pressure_10.freq_1.amp_0.001.xyz
+dump_lower.yaml
+dump_probes.yaml
+meta_data.txt
+*.xyz
+*.png
+*.yaml
