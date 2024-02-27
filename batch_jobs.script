@@ -75,13 +75,14 @@
 # frequencies and amplitudes.
 ###############################################
 
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 0.1 -in ./script.restart.read.ic.wiggle 
-./lmp -var fric 1 -var AMP 0.1 -var FREQ 0.01 -var P 0.1 -in ./script.restart.read.ic.wiggle 
-./lmp -var fric 1 -var AMP 0.1 -var FREQ 0.001 -var P 0.1 -in ./script.restart.read.ic.wiggle 
-
-# sh attentuation_data_extract.sh
-sh multiple_attenuation_data_extract.sh
-
-#./lmp -var AMP 0 -var FREQ 2.0 -var K 1 -var P .02 -in ./onlyrestart
-
-#./lmp -var AMP 0 -var FREQ 2.0 -var K 1 -var P .01 -in ./onlyrestart
+rm test.txt
+./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 10 -in ./script.restart.read.ic.wiggle
+octave -q attenuation_fix.m 
+./lmp -var fric 1 -var AMP 0.001 -var FREQ .1 -var P 10 -in ./script.restart.read.ic.wiggle 
+octave -q attenuation_fix.m 
+./lmp -var fric 1 -var AMP 0.001 -var FREQ .01 -var P 10 -in ./script.restart.read.ic.wiggle 
+octave -q attenuation_fix.m 
+./lmp -var fric 1 -var AMP 0.001 -var FREQ .001 -var P 10 -in ./script.restart.read.ic.wiggle 
+octave -q attenuation_fix.m 
+./lmp -var fric 1 -var AMP 0.001 -var FREQ .0001 -var P 10 -in ./script.restart.read.ic.wiggle 
+octave -q attenuation_fix.m 
