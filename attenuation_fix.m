@@ -119,6 +119,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 plot_mult_probe_zdisp(valid_probe_numbers)
 
+% Save the plot as an image file with driving frequency included in the filename
+plot_filename = sprintf('mult_probe_zdisp_freq_%s.png', num2str(driving_frequency));
+print(plot_filename, '-dpng');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Semi log plot (because exponential)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,7 +158,13 @@ text_location_y = max(abs(amplitude_vector));
 text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k');
 hold off;
 
-%%%% Export
+% Save the plot as an image file with driving frequency included in the filename
+plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
+print(plot_filename, '-dpng');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Export driving_frequency, attenuation,kn,kt,gamma_n,gamma_t
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load existing data from test.txt if it exists
 if exist('attenuation_data.txt', 'file') == 2
     existing_data = dlmread('attenuation_data.txt');
