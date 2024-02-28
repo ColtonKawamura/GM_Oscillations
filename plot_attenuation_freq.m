@@ -9,9 +9,15 @@ kt = data(:, 4);
 gamma_n = data(:, 5);
 gamma_t = data(:, 6);
 
-% Plot frequency vs. gamma_n
-plot(frequency, attenuation, 'o');
-xlabel('Frequency');
-ylabel('attenuation');
-title('Frequency vs. attenuation');
+% Calculate angular frequency
+angular_frequency = 2 * pi * frequency;
+
+% Calculate the product of angular frequency and gamma_n
+angular_freq_times_gamma_n = angular_frequency .* gamma_n;
+
+% Plot the log-log plot
+loglog(angular_freq_times_gamma_n, attenuation, 'o');
+xlabel('\omega \times \Gamma_n');
+ylabel('Attenuation');
+title('Attenuation Results');
 grid on;
