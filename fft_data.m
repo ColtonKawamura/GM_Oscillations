@@ -78,7 +78,7 @@ function fft_data(probe_number)
     amplitude
 
     % Find the index of the frequency closest to 1
-    desired_frequency = 1;
+    desired_frequency = driving_frequency;
 
     % Find the index of the closest frequency to the desired frequency
     [~, idx_desired] = min(abs(freq_vector - desired_frequency));
