@@ -75,26 +75,25 @@
 # frequencies and amplitudes.
 ###############################################
 
+
+# Remove existing attenuation data file
 rm attenuation_data.txt
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 10 -in ./script.restart.read.ic.wiggle
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m 
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.5 -var P 10 -in ./script.restart.read.ic.wiggle
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m 
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.25 -var P 10 -in ./script.restart.read.ic.wiggle
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.125 -var P 10 -in ./script.restart.read.ic.wiggle 
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m 
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.0625 -var P 10 -in ./script.restart.read.ic.wiggle 
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m 
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.03125 -var P 10 -in ./script.restart.read.ic.wiggle 
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m 
-./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.015625 -var P 10 -in ./script.restart.read.ic.wiggle 
-python3 process_probes_yaml.py
-octave -q attenuation_fix.m 
+
+# Define the list of frequencies
+FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
+
+# Iterate over the frequencies
+for FREQ in "${FREQ_LIST[@]}"
+do
+    # Run LAMMPS simulation
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var P 10 -in ./script.restart.read.ic.wiggle
+
+    # Process probe data with Python script
+    python3 process_probes_yaml.py
+
+    # Fix attenuation in Octave
+    octave -q attenuation_fix.m
+done
+
+# Plot attenuation data for all frequencies
 octave -q plot_attenuation_freq.m
