@@ -24,12 +24,12 @@ num_probes = size(probe_columns, 2);
 % dt = 2.27326038544775e-05;
 % driving_frequency = 1;
 
-% Open the file for reading
-fileID = fopen('meta_data.txt', 'r');
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pull parameter data from the simulation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Open the file for reading
+fileID = fopen('meta_data.txt', 'r');
+
 dt = NaN;
 driving_frequency = NaN;
 kn = NaN;
@@ -159,7 +159,7 @@ text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k
 hold off;
 
 % Save the plot as an image file with driving frequency included in the filename
-plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
+plot_filename = sprintf('linear_fit_plot_mailfreq_%s.png', num2str(driving_frequency));
 print(plot_filename, '-dpng');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
