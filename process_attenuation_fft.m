@@ -164,7 +164,7 @@ text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k
 hold off;
 
 % Save the plot as an image file with driving frequency included in the filename
-plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
+plot_filename = sprintf('linear_fft_fit_plot_freq_%s.png', num2str(driving_frequency));
 print(plot_filename, '-dpng');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
