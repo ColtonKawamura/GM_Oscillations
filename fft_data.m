@@ -15,13 +15,50 @@ function fft_data(probe_number)
         eval([variable_name ' = real(probe_columns(:, i));']); % Convert to real numbers
     end
 
-    % Constants
-    dt = 2.27326038544775e-05;
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Pull parameter data from the simulation
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Open the file for reading
+    fileID = fopen('meta_data.txt', 'r');
+
+    dt = NaN;
+    driving_frequency = NaN;
+    kn = NaN;
+    kt = NaN;
+    gamma_n = NaN;
+    gamma_t = NaN;
+
+    % Read the file line by line
+    while ~feof(fileID)
+        line = fgetl(fileID);
+        % Find and extract parameters
+        if ~isempty(strfind(line, 'dt='))
+            dt_str = line(strfind(line, 'dt=')+3:end);
+            dt = str2double(dt_str);
+        elseif ~isempty(strfind(line, 'frequency='))
+            frequency_str = line(strfind(line, 'frequency=')+10:end);
+            driving_frequency = str2double(frequency_str);
+        elseif ~isempty(strfind(line, 'kn='))
+            kn_str = line(strfind(line, 'kn=')+3:end);
+            kn = str2double(kn_str);
+        elseif ~isempty(strfind(line, 'kt='))
+            kt_str = line(strfind(line, 'kt=')+3:end);
+            kt = str2double(kt_str);
+        elseif ~isempty(strfind(line, 'gamma_n='))
+            gamma_n_str = line(strfind(line, 'gamma_n=')+8:end);
+            gamma_n = str2double(gamma_n_str);
+        elseif ~isempty(strfind(line, 'gamma_t='))
+            gamma_t_str = line(strfind(line, 'gamma_t=')+8:end);
+            gamma_t = str2double(gamma_t_str);
+        end
+    end
+
+    % Close the file
+    fclose(fileID);
     time = step * dt;
 
     % Get the specified probe data
     probe_data = eval(['probe' num2str(probe_number)]);
-
 
     probe_data = probe_data;
     average_dt = mean(diff(time));
