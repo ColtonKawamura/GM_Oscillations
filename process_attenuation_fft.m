@@ -84,7 +84,7 @@ for probe_number = 1:num_probes
         [amplitude, idx_max] = max(abs(normalized_fft_data(index_vector)) * 2);
         dominant_frequency = freq_vector(idx_max);
 
-        % Find the index of the frequency closest to 1
+        % Find the index of the frequency closest to driving frequency
          desired_frequency = driving_frequency;
 
         % Find the index of the closest frequency to the desired frequency
