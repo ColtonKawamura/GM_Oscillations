@@ -107,9 +107,13 @@ for probe_number = 1:num_probes
             initial_position_vector = [initial_position_vector, probe_data(1)];
             amplitude_vector = [amplitude_vector, s(1)];
             valid_probe_numbers = [valid_probe_numbers, probe_number];
+            clear 'R';
+            clear 'R2';
         end
     catch
         disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', continuing with the next probe.']);
+        clear 'R';
+        clear 'R2';
     end
 end
 
@@ -159,7 +163,7 @@ text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k
 hold off;
 
 % Save the plot as an image file with driving frequency included in the filename
-plot_filename = sprintf('linear_fit_plot_mailfreq_%s.png', num2str(driving_frequency));
+plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
 print(plot_filename, '-dpng');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
