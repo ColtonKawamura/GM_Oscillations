@@ -15,13 +15,6 @@ angular_frequency = 2 * pi * frequency;
 % Calculate the product of angular frequency and gamma_n
 angular_freq_times_gamma_n = angular_frequency .* gamma_n;
 
-% % Plot the log-log plot
-% loglog(angular_freq_times_gamma_n, attenuation, 'o');
-% xlabel('\omega \gamma_n');
-% ylabel('Attenuation');
-% title('Attenuation Results');
-% grid on;
-
 % Perform linear fit
 coefficients = polyfit(log(angular_freq_times_gamma_n), log(attenuation), 1);
 
