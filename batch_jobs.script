@@ -77,17 +77,24 @@
 
 rm attenuation_data.txt
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 10 -in ./script.restart.read.ic.wiggle
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m 
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.5 -var P 10 -in ./script.restart.read.ic.wiggle
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m 
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.25 -var P 10 -in ./script.restart.read.ic.wiggle
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.125 -var P 10 -in ./script.restart.read.ic.wiggle 
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m 
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.0625 -var P 10 -in ./script.restart.read.ic.wiggle 
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m 
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.03125 -var P 10 -in ./script.restart.read.ic.wiggle 
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m 
 ./lmp -var fric 1 -var AMP 0.001 -var FREQ 0.015625 -var P 10 -in ./script.restart.read.ic.wiggle 
+python3 process_probes_yaml.py
 octave -q attenuation_fix.m 
 octave -q plot_attenuation_freq.m
