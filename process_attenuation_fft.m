@@ -58,8 +58,6 @@ while ~feof(fileID)
     end
 end
 
-%Debugging
-driving_frequency=0.125
 % Close the file
 fclose(fileID);
 time = step * dt;
@@ -126,9 +124,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 plot_mult_probe_zdisp(valid_probe_numbers)
 
-% % Save the plot as an image file with driving frequency included in the filename
-% plot_filename = sprintf('mult_probe_zdisp_freq_%s.png', num2str(driving_frequency));
-% print(plot_filename, '-dpng');
+% Save the plot as an image file with driving frequency included in the filename
+plot_filename = sprintf('mult_probe_zdisp_freq_%s.png', num2str(driving_frequency));
+print(plot_filename, '-dpng');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Semi log plot (because exponential)
@@ -165,24 +163,24 @@ text_location_y = max(abs(amplitude_vector));
 text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k');
 hold off;
 
-% % Save the plot as an image file with driving frequency included in the filename
-% plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
-% print(plot_filename, '-dpng');
+% Save the plot as an image file with driving frequency included in the filename
+plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
+print(plot_filename, '-dpng');
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Export driving_frequency, attenuation,kn,kt,gamma_n,gamma_t
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Load existing data from test.txt if it exists
-% if exist('attenuation_data.txt', 'file') == 2
-%     existing_data = dlmread('attenuation_data.txt');
-% else
-%     existing_data = [];
-% end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Export driving_frequency, attenuation,kn,kt,gamma_n,gamma_t
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load existing data from test.txt if it exists
+if exist('attenuation_data.txt', 'file') == 2
+    existing_data = dlmread('attenuation_data.txt');
+else
+    existing_data = [];
+end
 
-% attenuation = abs(slope);
-% % Append the new data to the existing data
-% new_data = [driving_frequency, attenuation,kn,kt,gamma_n,gamma_t];
-% combined_data = [existing_data; new_data];
+attenuation = abs(slope);
+% Append the new data to the existing data
+new_data = [driving_frequency, attenuation,kn,kt,gamma_n,gamma_t];
+combined_data = [existing_data; new_data];
 
-% % Write the combined data to test.txt
-% dlmwrite('attenuation_data.txt', combined_data);
+% Write the combined data to test.txt
+dlmwrite('attenuation_data.txt', combined_data);
