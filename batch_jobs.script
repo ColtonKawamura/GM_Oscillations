@@ -5,7 +5,9 @@
 
 #USAGE:
 # in put the following into command line:
-# sh this_filename.sh
+# sh this_filename
+# or
+# bash this_filename
 
 # All questions regarding this script send to c.kawamura@me.com
 ###############################################
