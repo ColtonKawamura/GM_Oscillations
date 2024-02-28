@@ -158,8 +158,8 @@ print gamma_t=${gamma_t} append meta_data.txt screen no
 ###############################################
 # RUN
 ###############################################
-
-fix haltcriteria all halt 1 v_time > v_required_sim_time
+variable haltthreshold equal time-${required_sim_time}
+fix haltcriteria all halt 1 v_haltthreshold > 0
 run 		100000000
 print "ALL DONE"
 
