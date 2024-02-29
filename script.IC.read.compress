@@ -50,7 +50,8 @@ variable	tcol equal 2*${PI}/sqrt(2*${kn}/${meff})
 variable	dt equal ${tcol}*0.0001 # 1e-5
 timestep 	${dt}
 variable	time equal step*dt
-variable	dimensionless_p equal ${P}*${d_ave}/${kn}
+# variable	dimensionless_p equal ${P}*${d_ave}/${kn}
+variable	P equal ${dimensionless_p}*${kn}/${d_ave}
 
 if "${fric} == 1" then & 
 	"variable friction_status string Friction_ON" &
@@ -122,7 +123,7 @@ fix extra all print 10005  	"""
 ###############################################
 fix 		allow_flow_movement flow nve/sphere
 fix 		allow_upper_movement upper move linear 0.0 0.0 NULL
-fix			force_upper_movement upper aveforce 0.0 0.0 -10
+fix			force_upper_movement upper aveforce 0.0 0.0 -${P}
 fix 		wiggle_lower lower move wiggle 0 0 0 ${PER}
 fix 		apply_viscous all viscous 0.01
 
@@ -143,8 +144,8 @@ variable ke equal ke
 ###############################################
 # OUTPUTS
 ###############################################
-dump movie_system all movie 10000 ./movie.IC.${friction_status}.Pressure_${P}.mp4 type type zoom 2.0 adiam 1.5 size 1280 720
-dump gif_system all movie 10000 ./movie.IC.${friction_status}.Pressure_${P}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+dump movie_system all movie 10000 ./movie.IC.${friction_status}.Pressure_${dimensionless_p}.mp4 type type zoom 2.0 adiam 1.5 size 1280 720
+dump gif_system all movie 10000 ./movie.IC.${friction_status}.Pressure_${dimensionless_p}.gif type type zoom 2.0 adiam 1.5 size 1280 720
 
 ###############################################
 # RUN
@@ -163,7 +164,7 @@ jump SELF loop
 label break
 
 unfix 		force_upper_movement
-fix			new_force_upper_movement upper aveforce 0.0 0.0 -${P}
+fix			new_force_upper_movement upper aveforce 0.0 0.0 -${dimensionless_p}
 unfix 		extra
 fix new_extra all print 10005  	"""
 ****************************************************************************
@@ -194,7 +195,7 @@ print "ALL DONE"
 # RESTART OUTPUT
 ###############################################
 
-write_restart ./restart.IC.${friction_status}.pressure_${P}.% 
+write_restart ./restart.IC.${friction_status}.pressure_${dimensionless_p}.% 
 
 ###############################################
 # RECYCLING BIN
