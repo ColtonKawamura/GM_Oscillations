@@ -1,3 +1,16 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Purpose of this is to make a sinusoidal fit to the data output
+% from script.restart.read.ic.wiggle and perform a sinusoidal fit
+% to data that meet a threshold criteria of R^2>.5
+% 
+% Output are two plots of the data and creation/modified output
+% data called attenuation_data.txt
+% 
+% DEPENDENCY:
+% Requires plot_mult_probe_zdisp.m to show plot of clean data.
+% but can be commented out without loss of functionality.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
 clear all
 close all
 
