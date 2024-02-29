@@ -1,3 +1,12 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Purpose of this is to make a sinusoidal fit to the data output
+% from attenuation_data.txt and perform a linear fit
+% to loglog data.
+% 
+% Output are plot of the data and creation of output data for future
+% processing.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Load data from test.txt
 data = dlmread('attenuation_data.txt', ',');
 
