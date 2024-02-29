@@ -3,8 +3,8 @@
 # from script.IC.read.compress restart file and 
 # wiggle the bottom
 
-# Output is two yaml files, VMD file, and movies of
-# the simulation.
+# Output is two yaml files, a meta-data file, 
+# VMD file, and movies of the simulation.
 
 # The following variables will need to be 
 # passed through the command line to run the code:
@@ -15,8 +15,8 @@
 ###############################################
 
 ###############################################
-# Re-Defined if friction is on or off. Needed
-# to read th correct restart file.
+# Re-Define if friction is on or off. Needed
+# to read the correct restart file.
 ###############################################
 if "${fric} == 1" then &
 	"variable friction_status string Friction_ON" &
@@ -29,7 +29,7 @@ else &
 # is replaced by “base”.
 # Read_restart then reads the additional files. 
 ###############################################
-read_restart ./restart.IC.${friction_status}.pressure_${P}.%
+read_restart ./restart.IC.${friction_status}.pressure_${dimensionless_p}.%
 reset_timestep 0
 
 ###############################################
@@ -56,7 +56,8 @@ variable	dt equal ${tcol}*0.0001 # 1e-5
 # variable	dt equal 1e-5
 timestep 	${dt}
 variable	time equal step*dt
-variable	dimensionless_p equal ${P}*${d_ave}/${kn}
+# variable	dimensionless_p equal ${P}*${d_ave}/${kn}
+variable	P equal ${dimensionless_p}*${kn}/${d_ave}
 variable	required_sim_time equal 5*${PER}
 
 ###############################################
@@ -142,9 +143,9 @@ compute_modify	thermo_temp dynamic/dof yes
 ###############################################
 # OUTPUTS
 ###############################################
-# dump movie_system all movie 100 ./movie.wiggle.full_system.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
-# dump movie_probes probes movie 100 ./movie.wiggle.probes.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
-# dump VMD_probes probes xyz 100 VMD_out.wiggle.probes.${friction_status}.pressure_${P}.freq_${FREQ}.amp_${AMP}.xyz
+# dump movie_system all movie 100 ./movie.wiggle.full_system.${friction_status}.pressure_${didimensionless_pme}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+# dump movie_probes probes movie 100 ./movie.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+# dump VMD_probes probes xyz 100 VMD_out.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.xyz
 dump yaml_probes probes yaml 100 dump_probes.yaml id type x y z
 dump yaml_lower lower yaml 100 dump_lower.yaml id type x y z
 dump_modify yaml_probes format line "%d %d %.20f %.20f %.20f"
@@ -154,9 +155,10 @@ print kn=${kn} append meta_data.txt screen no
 print kt=${kt} append meta_data.txt screen no
 print gamma_n=${gamma_n} append meta_data.txt screen no
 print gamma_t=${gamma_t} append meta_data.txt screen no
+print dimensionless_p=${dimensionless_p} append meta_data.txt screen no
 
 ###############################################
-# RUN
+# RUN until 5 cycles have been completed
 ###############################################
 variable haltthreshold equal time-${required_sim_time}
 fix haltcriteria all halt 1 v_haltthreshold > 0
