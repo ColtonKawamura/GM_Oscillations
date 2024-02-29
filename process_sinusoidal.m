@@ -9,7 +9,7 @@
 % DEPENDENCY:
 % Requires plot_mult_probe_zdisp.m to show plot of clean data.
 % but can be commented out without loss of functionality.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all
 close all
