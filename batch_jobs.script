@@ -1,84 +1,46 @@
 
 ###############################################
 # The purpose of this script is to submit a LAMMPS
-# job to HAMMING.
+# job to to a Unix-based (Mac OS) system using bash.
 
-#USAGE:
+# USAGE:
 # in put the following into command line:
 # sh this_filename
 # or
 # bash this_filename
 
+# DESCRPTION:
+# This script will read in data from
+# data_ICN10000W7.granular
+# and then create an initial condtion (IC) packing
+# script.IC.read.compress
+# Then, from that IC, it will run an oscillation
+# LAMMPS script called
+# script.restart.read.ic.wiggle
+# using frequencies you specify in FREQ_LIST.
+#
+
 # All questions regarding this script send to c.kawamura@me.com
 ###############################################
 
 
-###############################################
-# HAMMING specific parameters
-###############################################
-
-#!/bin/bash
-#SBATCH --job-name=VibShear7
-#SBATCH --array=1-198
-#SBATCH --nodes=1
-#SBATCH --ntasks=4
-#SBATCH --constraint=epyc
-#SBATCH --cpus-per-task=1
-#SBATCH --time=24:00:00
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=c.kawamura@me.com
-#SBATCH -o VibShear7.out
-#SBATCH --mem-per-cpu=4000
-
-
-###############################################
-# Source aliases and libraries
-###############################################
-
-#source /etc/profile
-#source ~/.bashrc
-
-###############################################
-# Load LAMMPS and MPI for calculations
-###############################################
-
-#module load /share/spack/modules/linux-centos7-x86_64/gcc-7.2.0/lammps-20200109-ti6
-#module load /share/spack/modules/linux-centos7-x86_64/gcc-7.2.0/openmpi-2.1.2-owp
-
-###############################################
-# Run initial calculations WITHOUT shear friction 
-# and save restart
-###############################################
-
-# ./lmp -var fric 1 -var AMP 0 -var FREQ 0.1 -var P 0.1 -in ./script.IC.read.compress
-#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.05 -in ./script.IC.read.compress
-#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.02 -in ./script.IC.read.compress
-#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.01 -in ./script.IC.read.compress
-#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.005 -in ./script.IC.read.compress
-#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.002 -in ./script.IC.read.compress
-#./lmp -var fric 0 -var AMP 0 -var FREQ 1.0 -var P 0.001 -in ./script.IC.read.compress
+##############################################################################################
+# Perform run for pressure .1
+##############################################################################################
 
 ###############################################
 # Run initial calculations WITH shear friction 
 # and save restart
 ###############################################
 
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.1 -in ./script.IC.read.compress
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.05 -in ./script.IC.read.compress
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.02 -in ./script.IC.read.compress
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.01 -in ./script.IC.read.compress
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.005 -in ./script.IC.read.compress
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.002 -in ./script.IC.read.compress
-#./lmp -var fric 1 -var AMP 0 -var FREQ 1.0 -var P 0.001 -in ./script.IC.read.compress
+./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.1 -in ./script.IC.read.compress
 
 ###############################################
 # Use output "restart" file from above and 
 # wiggle (vibrate) the bottom face with different
 # frequencies and amplitudes.
 ###############################################
-
-
-# Remove existing attenuation data file
+# Remove existing attenuation data file if ther is one
 rm attenuation_data.txt
 
 # Define the list of frequencies
@@ -88,13 +50,194 @@ FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
 for FREQ in "${FREQ_LIST[@]}"
 do
     # Run LAMMPS simulation
-    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var P 10 -in ./script.restart.read.ic.wiggle
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
 
     # Process probe data with Python script
     python3 process_probes_yaml.py
 
     # Fix attenuation in Octave
-    octave -q attenuation_fix.m
+    octave -q process_sinusoidal.m
+done
+
+# Plot attenuation data for all frequencies
+octave -q plot_attenuation_freq.m
+
+
+###############################################
+# Run initial calculations WITH shear friction 
+# and save restart
+###############################################
+
+./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.1 -in ./script.IC.read.compress
+
+###############################################
+# Use output "restart" file from above and 
+# wiggle (vibrate) the bottom face with different
+# frequencies and amplitudes.
+###############################################
+# Remove existing attenuation data file if ther is one
+rm attenuation_data.txt
+
+# Define the list of frequencies
+FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
+
+# Iterate over the frequencies
+for FREQ in "${FREQ_LIST[@]}"
+do
+    # Run LAMMPS simulation
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
+
+    # Process probe data with Python script
+    python3 process_probes_yaml.py
+
+    # Fix attenuation in Octave
+    octave -q process_sinusoidal.m
+done
+
+# Plot attenuation data for all frequencies
+octave -q plot_attenuation_freq.m
+
+##############################################################################################
+# Perform run for pressure .01
+##############################################################################################
+
+###############################################
+# Run initial calculations WITH shear friction 
+# and save restart
+###############################################
+
+./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.01 -in ./script.IC.read.compress
+
+###############################################
+# Use output "restart" file from above and 
+# wiggle (vibrate) the bottom face with different
+# frequencies and amplitudes.
+###############################################
+# Remove existing attenuation data file if ther is one
+rm attenuation_data.txt
+
+# Define the list of frequencies
+FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
+
+# Iterate over the frequencies
+for FREQ in "${FREQ_LIST[@]}"
+do
+    # Run LAMMPS simulation
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
+
+    # Process probe data with Python script
+    python3 process_probes_yaml.py
+
+    # Fix attenuation in Octave
+    octave -q process_sinusoidal.m
+done
+
+# Plot attenuation data for all frequencies
+octave -q plot_attenuation_freq.m
+
+
+###############################################
+# Run initial calculations WITH shear friction 
+# and save restart
+###############################################
+
+./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.1 -in ./script.IC.read.compress
+
+###############################################
+# Use output "restart" file from above and 
+# wiggle (vibrate) the bottom face with different
+# frequencies and amplitudes.
+###############################################
+# Remove existing attenuation data file if ther is one
+rm attenuation_data.txt
+
+# Define the list of frequencies
+FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
+
+# Iterate over the frequencies
+for FREQ in "${FREQ_LIST[@]}"
+do
+    # Run LAMMPS simulation
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
+
+    # Process probe data with Python script
+    python3 process_probes_yaml.py
+
+    # Fix attenuation in Octave
+    octave -q process_sinusoidal.m
+done
+
+# Plot attenuation data for all frequencies
+octave -q plot_attenuation_freq.m
+
+##############################################################################################
+# Perform run for pressure .001
+##############################################################################################
+
+###############################################
+# Run initial calculations WITH shear friction 
+# and save restart
+###############################################
+
+./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.001 -in ./script.IC.read.compress
+
+###############################################
+# Use output "restart" file from above and 
+# wiggle (vibrate) the bottom face with different
+# frequencies and amplitudes.
+###############################################
+# Remove existing attenuation data file if ther is one
+rm attenuation_data.txt
+
+# Define the list of frequencies
+FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
+
+# Iterate over the frequencies
+for FREQ in "${FREQ_LIST[@]}"
+do
+    # Run LAMMPS simulation
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
+
+    # Process probe data with Python script
+    python3 process_probes_yaml.py
+
+    # Fix attenuation in Octave
+    octave -q process_sinusoidal.m
+done
+
+# Plot attenuation data for all frequencies
+octave -q plot_attenuation_freq.m
+
+
+###############################################
+# Run initial calculations WITH shear friction 
+# and save restart
+###############################################
+
+./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.1 -in ./script.IC.read.compress
+
+###############################################
+# Use output "restart" file from above and 
+# wiggle (vibrate) the bottom face with different
+# frequencies and amplitudes.
+###############################################
+# Remove existing attenuation data file if ther is one
+rm attenuation_data.txt
+
+# Define the list of frequencies
+FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
+
+# Iterate over the frequencies
+for FREQ in "${FREQ_LIST[@]}"
+do
+    # Run LAMMPS simulation
+    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
+
+    # Process probe data with Python script
+    python3 process_probes_yaml.py
+
+    # Fix attenuation in Octave
+    octave -q process_sinusoidal.m
 done
 
 # Plot attenuation data for all frequencies
