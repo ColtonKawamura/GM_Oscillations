@@ -32,7 +32,6 @@ neighbor	0.3 bin 	# Size of "skin" for neighbor lists
 ###############################################
 # VARIABLES
 ###############################################
-variable	PER equal 1/${FREQ}
 variable	d_ave equal 1
 variable	density equal 1
 variable	PI equal 3.141592653589
@@ -108,7 +107,6 @@ fix extra all print 10005  	"""
 *** Pressure = ${P} 
 *** Dimensionless Pressure = ${dimensionless_p} 
 *** Vibration Amplitude = ${AMP} 
-*** Vibration Frequency = ${FREQ} 
 *** Time = ${time}
 *** dt = ${dt}
 *** kn = ${kn}
@@ -124,7 +122,6 @@ fix extra all print 10005  	"""
 fix 		allow_flow_movement flow nve/sphere
 fix 		allow_upper_movement upper move linear 0.0 0.0 NULL
 fix			force_upper_movement upper aveforce 0.0 0.0 -${P}
-fix 		wiggle_lower lower move wiggle 0 0 0 ${PER}
 fix 		apply_viscous all viscous 0.01
 
 ###############################################
@@ -173,7 +170,6 @@ fix new_extra all print 10005  	"""
 *** Pressure = ${P} 
 *** Dimensionless Pressure = ${dimensionless_p} 
 *** Vibration Amplitude = ${AMP} 
-*** Vibration Frequency = ${FREQ} 
 *** Time = ${time}
 *** dt = ${dt}
 *** kn = ${kn}
