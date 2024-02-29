@@ -9,6 +9,23 @@
 # or
 # bash this_filename
 
+# REQUIREMENTS:
+## SOFTWARE:
+### Python3
+### Octave
+### LAMMPS build with GRANULAR and EXTRA_DUMP packages
+#
+## FILES:
+### data_ICN10000W7.granular
+### batch_jobs.script
+### script.IC.read.compress
+### script.restart.read.ic.wiggle
+### process_probes_yaml.py
+### process_sinusoidal.m
+### plot_mult_probe_zdisp.m
+### plot_attenuation_freq.m
+
+
 # DESCRPTION:
 # This script will read in data from
 # data_ICN10000W7.granular
@@ -18,7 +35,11 @@
 # LAMMPS script called
 # script.restart.read.ic.wiggle
 # using frequencies you specify in FREQ_LIST.
-#
+# Final output will be data file called
+# data_attenuation_pressure_(dimensionless_p)_freq_(FREQ).txt 
+# and
+# plot_attenuation_pressure_(dimensionless_p)_freq_(FREQ).png 
+# where (dimensionless_p) and (FREQ) are the variables specified.
 
 # All questions regarding this script send to c.kawamura@me.com
 ###############################################
