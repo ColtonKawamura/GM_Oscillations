@@ -161,7 +161,7 @@ jump SELF loop
 label break
 
 unfix 		force_upper_movement
-fix			new_force_upper_movement upper aveforce 0.0 0.0 -${dimensionless_p}
+fix			new_force_upper_movement upper aveforce 0.0 0.0 -${P}
 unfix 		extra
 fix new_extra all print 10005  	"""
 ****************************************************************************
