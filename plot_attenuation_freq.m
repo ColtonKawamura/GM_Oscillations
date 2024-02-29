@@ -8,6 +8,7 @@ kn = data(:, 3);
 kt = data(:, 4);
 gamma_n = data(:, 5);
 gamma_t = data(:, 6);
+dimensionless_p = data(:, 7);
 
 % Calculate angular frequency
 angular_frequency = 2 * pi * frequency;
@@ -45,3 +46,10 @@ text_location_y = min(attenuation);
 text(text_location_x/10, text_location_y*10, equation_str, 'FontSize', 12, 'Color', 'k');
 hold off;
 
+% Save data to text file
+data_filename = sprintf('data_attenuation_pressure_%.8f_freq_%.8f.txt', dimensionless_p, frequency);
+dlmwrite(data_filename, [frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p], ',');
+
+% Save plot as PNG file
+plot_filename = sprintf('plot_attenuation_pressure_%.8f_freq_%.8f.png', dimensionless_p, frequency);
+saveas(gcf, plot_filename);
