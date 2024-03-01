@@ -227,38 +227,3 @@ done
 
 # Plot attenuation data for all frequencies
 octave -q plot_attenuation_freq.m
-
-
-###############################################
-# Run initial calculations WITH shear friction 
-# and save restart
-###############################################
-
-./lmp -var fric 1 -var AMP 0 -var dimensionless_p 0.1 -in ./script.IC.read.compress
-
-###############################################
-# Use output "restart" file from above and 
-# wiggle (vibrate) the bottom face with different
-# frequencies and amplitudes.
-###############################################
-# Remove existing attenuation data file if ther is one
-rm attenuation_data.txt
-
-# Define the list of frequencies
-FREQ_LIST=(1 0.5 0.25 0.125 0.0625 0.03125 0.015625)
-
-# Iterate over the frequencies
-for FREQ in "${FREQ_LIST[@]}"
-do
-    # Run LAMMPS simulation
-    ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p 0.1 -in ./script.restart.read.ic.wiggle
-
-    # Process probe data with Python script
-    python3 process_probes_yaml.py
-
-    # Fix attenuation in Octave
-    octave -q process_sinusoidal.m
-done
-
-# Plot attenuation data for all frequencies
-octave -q plot_attenuation_freq.m
