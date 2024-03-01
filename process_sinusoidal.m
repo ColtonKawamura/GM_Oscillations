@@ -141,7 +141,7 @@ end
 plot_mult_probe_zdisp(valid_probe_numbers)
 
 % Save the plot as an image file with driving frequency included in the filename
-plot_filename = sprintf('mult_probe_zdisp_freq_%s.png', num2str(driving_frequency));
+plot_filename = sprintf('mult_probe_zdisp_pressure_%s_freq_%s.png', num2str(dimensionless_p), num2str(driving_frequency));
 print(plot_filename, '-dpng');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -180,7 +180,7 @@ text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k
 hold off;
 
 % Save the plot as an image file with driving frequency included in the filename
-plot_filename = sprintf('linear_fit_plot_freq_%s.png', num2str(driving_frequency));
+plot_filename = sprintf('linear_fit_plot_pressure_%s_freq_%s.png',num2str(dimensionless_p), num2str(driving_frequency));
 print(plot_filename, '-dpng');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
