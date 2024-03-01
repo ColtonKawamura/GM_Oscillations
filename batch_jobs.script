@@ -14,7 +14,6 @@
 ### Python3
 ### Octave
 ### LAMMPS build with GRANULAR and EXTRA_DUMP packages
-#
 ## FILES:
 ### data_ICN10000W7.granular
 ### batch_jobs.script
