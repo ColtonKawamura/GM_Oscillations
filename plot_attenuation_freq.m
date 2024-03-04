@@ -56,9 +56,9 @@ text(text_location_x/10, text_location_y*10, equation_str, 'FontSize', 12, 'Colo
 hold off;
 
 % Save data to text file
-data_filename = sprintf('data_attenuation_pressure_%.8f_freq_%.8f.txt', dimensionless_p, frequency);
+data_filename = sprintf('atten_pressure_%.3f.txt', dimensionless_p(1));
 dlmwrite(data_filename, [frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p], ',');
 
 % Save plot as PNG file
-plot_filename = sprintf('plot_attenuation_pressure_%.8f_freq_%.8f.png', dimensionless_p, frequency);
+plot_filename = sprintf('atten_pressure_%.3f.png', dimensionless_p(1));
 saveas(gcf, plot_filename);
