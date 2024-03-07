@@ -167,8 +167,8 @@ fix new_extra all print 10005  	"""
 ****************************************************************************
 *** Current Simulation is Initial Conditions PHASE II with parameters: 
 *** ${friction_status} 
-*** Pressure = ${P} 
-*** Dimensionless Pressure = ${dimensionless_p} 
+*** Pressure = 10 
+*** Dimensionless Pressure = 0.1
 *** Vibration Amplitude = ${AMP} 
 *** Time = ${time}
 *** dt = ${dt}
