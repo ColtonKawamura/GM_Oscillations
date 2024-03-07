@@ -53,7 +53,7 @@
 # and save restart. Omit this step if you already
 # have restarts.
 ###############################################
-PRESSURE_LIST=(0.1 0.01 0.001)
+PRESSURE_LIST=(0.001)
 
 for PRESSURE in "${PRESSURE_LIST[@]}"
 do
@@ -72,7 +72,7 @@ PRESSURE_LIST=(0.1 0.01 0.001)
 
 for PRESSURE in "${PRESSURE_LIST[@]}"
 do
-    ###############################################
+    ###############################################p
     # Use output "restart" file from above and 
     # wiggle (vibrate) the bottom face with different
     # frequencies and amplitudes.
