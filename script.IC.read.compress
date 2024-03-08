@@ -51,6 +51,7 @@ timestep 	${dt}
 variable	time equal step*dt
 # variable	dimensionless_p equal ${P}*${d_ave}/${kn}
 variable	P equal ${dimensionless_p}*${kn}/${d_ave}
+variable	pressure_phase1 equal 20
 
 if "${fric} == 1" then & 
 	"variable friction_status string Friction_ON" &
@@ -104,8 +105,6 @@ fix extra all print 10005  	"""
 ****************************************************************************
 *** Current Simulation is Initial Conditions PHASE I with parameters: 
 *** ${friction_status} 
-*** Pressure = ${P} 
-*** Dimensionless Pressure = ${dimensionless_p} 
 *** Vibration Amplitude = ${AMP} 
 *** Time = ${time}
 *** dt = ${dt}
@@ -161,7 +160,7 @@ jump SELF loop
 label break
 
 unfix 		force_upper_movement
-fix			new_force_upper_movement upper aveforce 0.0 0.0 -10
+fix			new_force_upper_movement upper aveforce 0.0 0.0 -${pressure_phase1}
 unfix 		extra
 fix new_extra all print 10005  	"""
 ****************************************************************************
