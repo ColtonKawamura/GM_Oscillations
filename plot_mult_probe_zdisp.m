@@ -1,6 +1,6 @@
 function plot_mult_probe_zdisp(varargin)
     % Load data
-    data = textread('plotdata_probes_zdisp.txt', '', 'headerlines', 1);
+    data = textread('./outputs/plotdata_probes_zdisp.txt', '', 'headerlines', 1);
     
     % Extract columns
     step = data(:, 1);
