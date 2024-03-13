@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Load data from test.txt
-data = dlmread('attenuation_data.txt', ',');
+data = dlmread('./outputs/attenuation_data.txt', ',');
 
 % Extract columns
 frequency = data(:, 1);
@@ -56,9 +56,9 @@ text(text_location_x/10, text_location_y*10, equation_str, 'FontSize', 12, 'Colo
 hold off;
 
 % Save data to text file
-data_filename = sprintf('atten_pressure_%.3f.txt', dimensionless_p(1));
+data_filename = sprintf('./outputs/atten_pressure_%.3f.txt', dimensionless_p(1));
 dlmwrite(data_filename, [frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p], ',');
 
 % Save plot as PNG file
-plot_filename = sprintf('atten_pressure_%.3f.png', dimensionless_p(1));
+plot_filename = sprintf('./outputs/atten_pressure_%.3f.png', dimensionless_p(1));
 saveas(gcf, plot_filename);
