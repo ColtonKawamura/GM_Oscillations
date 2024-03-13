@@ -78,13 +78,13 @@ do
     # frequencies and amplitudes.
     ###############################################
     # Remove existing attenuation data file if there is one
-    rm attenuation_data.txt
+    rm ./outputs/attenuation_data.txt
 
     # Iterate over the frequencies
     for FREQ in "${FREQ_LIST[@]}"
     do
         # Run LAMMPS simulation
-        ./lmp -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p $PRESSURE -in ./script.restart.read.ic.wiggle
+        ./lmp -l ./outputs/log.lammps -var fric 1 -var AMP 0.001 -var FREQ $FREQ -var dimensionless_p $PRESSURE -in ./script.restart.read.ic.wiggle
 
         # Process probe data with Python script
         python3 process_probes_yaml.py
