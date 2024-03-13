@@ -53,12 +53,12 @@
 # and save restart. Omit this step if you already
 # have restarts.
 ###############################################
-PRESSURE_LIST=(0.001)
+# PRESSURE_LIST=(0.001)
 
-for PRESSURE in "${PRESSURE_LIST[@]}"
-do
-    ./lmp -var fric 1 -var AMP 0 -var dimensionless_p $PRESSURE -in ./script.IC.read.compress
-done
+# for PRESSURE in "${PRESSURE_LIST[@]}"
+# do
+#     ./lmp -var fric 1 -var AMP 0 -var dimensionless_p $PRESSURE -in ./script.IC.read.compress
+# done
 
 ##############################################################################################
 # Perform oscillations at desired frequencies with pressures (must have restart file) from
