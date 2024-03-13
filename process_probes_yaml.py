@@ -10,7 +10,7 @@ except ImportError:
 timesteps = []
 
 # Open the YAML file for reading
-with open("dump_probes.yaml", "r") as f:
+with open("./outputs/dump_probes.yaml", "r") as f:
     # Use PyYAML to load all documents in the YAML file
     data = yaml.load_all(f, Loader=YamlLoader)
 
@@ -23,7 +23,7 @@ with open("dump_probes.yaml", "r") as f:
 
 print('Read %d timesteps from yaml dump' % len(timesteps))
 
-with open('plotdata_probes_zdisp.txt', 'w') as file:
+with open('./outputs/plotdata_probes_zdisp.txt', 'w') as file:
     # Write header
     file.write("Timestep")
 
@@ -45,7 +45,7 @@ with open('plotdata_probes_zdisp.txt', 'w') as file:
         file.write("\n")
 
 
-with open('plotdata_probes_ydisp.txt', 'w') as file:
+with open('./outputs/plotdata_probes_ydisp.txt', 'w') as file:
     # Write header
     file.write("Timestep")
 
@@ -66,7 +66,7 @@ with open('plotdata_probes_ydisp.txt', 'w') as file:
 
         file.write("\n")
 
-with open('plotdata_probes_xdisp.txt', 'w') as file:
+with open('./outputs/plotdata_probes_xdisp.txt', 'w') as file:
     # Write header
     file.write("Timestep")
 
