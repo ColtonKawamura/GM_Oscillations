@@ -9,7 +9,7 @@
 # The following variables will need to be 
 # passed through the command line to run the code:
 
-#./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var P 10 -in ./script.restart.read.ic.wiggle 
+#./lmp -var fric 1 -var AMP 0.001 -var FREQ 1 -var dimensionless_p 0.1 -var dimensionless_gamma_n .9 -in ./script.restart.read.ic.wiggle 
 
 # All questions regarding this script send to c.kawamura@me.com
 ###############################################
@@ -46,11 +46,11 @@ variable	e_n equal .10 #restiution coefficient
 variable	kn equal 100
 variable	meff equal ${mass_particle}^2/(2*${mass_particle}) #From J.Shafer, under equation 1
 variable	t_n equal sqrt(${meff}/${kn}*(1/${PI}^2+(ln(${e_n}/${meff})^2)))
-variable	gamma_n equal ${dimensionless_gamma_n}/${meff}
+variable	gamma_n equal ${dimensionless_gamma_n}*sqrt(${kn}*${meff})/${meff}
+variable    gamma_t equal ${gamma_n}*0.5
+variable    kt equal ${kn}*2/7
 variable	xmu equal 0.01
 variable	dampflag equal 1 #1 on, 0 off
-variable    kt equal ${kn}*2/7
-variable    gamma_t equal ${gamma_n}*0.5
 variable	tcol equal 2*${PI}/sqrt(2*${kn}/${meff})
 variable	dt equal ${tcol}*0.0001 # 1e-5
 # variable	dt equal 1e-5
