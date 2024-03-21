@@ -1,88 +1,87 @@
+import os
 import yaml
+import glob
+import re
 
-# Try to import CSafeLoader from PyYAML; if not available, use SafeLoader
-try:
-    from yaml import CSafeLoader as YamlLoader
-except ImportError:
-    from yaml import SafeLoader as YamlLoader
+# Specify the directory containing the YAML files
+outputs_directory = "./outputs/"
 
-# Initialize an empty list to store timestep data
-timesteps = []
+# Use glob to find all YAML files in the outputs directory
+yaml_files = glob.glob(os.path.join(outputs_directory, "dump_probes.*.yaml"))
 
-# Open the YAML file for reading
-with open("./outputs/dump_probes.yaml", "r") as f:
-    # Use PyYAML to load all documents in the YAML file
-    data = yaml.load_all(f, Loader=YamlLoader)
+# Define a regular expression pattern to extract the values from the file name. r" enables \. to be treated as just .
+pattern = r"dump_probes\.(\w+)\.pressure_([\d.]+)\.freq_([\d.]+)\.amp_([\d.]+)\.yaml"
 
-    # Loop through each document (timestep) in the YAML file
-    for d in data:
-        # Print information about the current timestep
-        print('Processing timestep %d' % d['timestep'])
-        # Append the entire timestep data to the list
-        timesteps.append(d)
+# Loop through each YAML file found
+for yaml_file in yaml_files:
+    print("Processing YAML file:", yaml_file)
+    # Extract the values from the file name using regular expressions (re.match)
+    match = re.match(pattern, os.path.basename(yaml_file))
+    if not match:
+        print(f"Could not extract values from filename: {yaml_file}")
+        continue
+    
+    friction_status, dimensionless_p, FREQ, AMP = match.groups()
 
-print('Read %d timesteps from yaml dump' % len(timesteps))
+    # Construct the file paths for the output files. f" enables formatted string
+    plotdata_probes_zdisp_file = os.path.join(outputs_directory, f"plotdata_probes_zdisp.{friction_status}.pressure_{dimensionless_p}.freq_{FREQ}.amp_{AMP}.txt")
+    plotdata_probes_ydisp_file = os.path.join(outputs_directory, f"plotdata_probes_ydisp.{friction_status}.pressure_{dimensionless_p}.freq_{FREQ}.amp_{AMP}.txt")
+    plotdata_probes_xdisp_file = os.path.join(outputs_directory, f"plotdata_probes_xdisp.{friction_status}.pressure_{dimensionless_p}.freq_{FREQ}.amp_{AMP}.txt")
 
-with open('./outputs/plotdata_probes_zdisp.txt', 'w') as file:
-    # Write header
-    file.write("Timestep")
+    # Initialize an empty list to store timestep data
+    timesteps = []
 
-    # Iterate over data columns for the first timestep to generate header
-    for N in range(len(timesteps[0]['data'])):
-        file.write(" Probe{}".format(N))
+    # Open the YAML file for reading
+    with open(yaml_file, "r") as f:
+        # Use PyYAML to load all documents in the YAML file
+        data = yaml.load_all(f, Loader=yaml.SafeLoader)
 
-    file.write("\n")
+        # Loop through each document (timestep) in the YAML file
+        for d in data:
+            # Append the entire timestep data to the list
+            timesteps.append(d)
 
-    # Iterate over timesteps
-    for n in range(len(timesteps)):
-        # Write timestep number
-        file.write("{}".format(timesteps[n]['timestep']))
-
-        # Write data columns for each timestep
+    # Write data to plotdata_probes_zdisp_file
+    with open(plotdata_probes_zdisp_file, 'w') as file:
+        # Write header
+        file.write("Timestep")
         for N in range(len(timesteps[0]['data'])):
-            file.write(" {}".format(timesteps[n]['data'][N][4]))
-
+            file.write(f" Probe{N}")
         file.write("\n")
 
+        # Iterate over timesteps
+        for timestep in timesteps:
+            file.write(f"{timestep['timestep']}")
+            for data in timestep['data']:
+                file.write(f" {data[4]}")  # Write z-displacement data
+            file.write("\n")
 
-with open('./outputs/plotdata_probes_ydisp.txt', 'w') as file:
-    # Write header
-    file.write("Timestep")
-
-    # Iterate over data columns for the first timestep to generate header
-    for N in range(len(timesteps[0]['data'])):
-        file.write(" Probe{}".format(N))
-
-    file.write("\n")
-
-    # Iterate over timesteps
-    for n in range(len(timesteps)):
-        # Write timestep number
-        file.write("{}".format(timesteps[n]['timestep']))
-
-        # Write data columns for each timestep
+    # Write data to plotdata_probes_ydisp_file
+    with open(plotdata_probes_ydisp_file, 'w') as file:
+        # Write header
+        file.write("Timestep")
         for N in range(len(timesteps[0]['data'])):
-            file.write(" {}".format(timesteps[n]['data'][N][3]))
-
+            file.write(f" Probe{N}")
         file.write("\n")
 
-with open('./outputs/plotdata_probes_xdisp.txt', 'w') as file:
-    # Write header
-    file.write("Timestep")
+        # Iterate over timesteps
+        for timestep in timesteps:
+            file.write(f"{timestep['timestep']}")
+            for data in timestep['data']:
+                file.write(f" {data[3]}")  # Write y-displacement data
+            file.write("\n")
 
-    # Iterate over data columns for the first timestep to generate header
-    for N in range(len(timesteps[0]['data'])):
-        file.write(" Probe{}".format(N))
-
-    file.write("\n")
-
-    # Iterate over timesteps
-    for n in range(len(timesteps)):
-        # Write timestep number
-        file.write("{}".format(timesteps[n]['timestep']))
-
-        # Write data columns for each timestep
+    # Write data to plotdata_probes_xdisp_file
+    with open(plotdata_probes_xdisp_file, 'w') as file:
+        # Write header
+        file.write("Timestep")
         for N in range(len(timesteps[0]['data'])):
-            file.write(" {}".format(timesteps[n]['data'][N][2]))
-
+            file.write(f" Probe{N}")
         file.write("\n")
+
+        # Iterate over timesteps
+        for timestep in timesteps:
+            file.write(f"{timestep['timestep']}")
+            for data in timestep['data']:
+                file.write(f" {data[2]}")  # Write x-displacement data
+            file.write("\n")

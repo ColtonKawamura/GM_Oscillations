@@ -1,6 +1,6 @@
-function plot_mult_probe_zdisp(varargin)
+function plot_mult_probe_zdisp(filename, varargin)
     % Load data
-    data = textread('./outputs/plotdata_probes_zdisp.txt', '', 'headerlines', 1);
+    data = textread(filename, '', 'headerlines', 1);
     
     % Extract columns
     step = data(:, 1);
@@ -13,7 +13,7 @@ function plot_mult_probe_zdisp(varargin)
     figure;
     
     % Plot trajectories for each specified probe
-    for i = 1:nargin
+    for i = 1:numel(varargin)
         % Determine the column for the current probe
         probe_index = varargin{i};
         
