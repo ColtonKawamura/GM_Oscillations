@@ -104,7 +104,7 @@ for i = 1:numel(data_files_info)
                 % Get the specified probe data
                 probe_data = real(probe_columns(:, probe_number));
 
-                % Find initial oscillation index
+                % Find initial oscillation index when displacement rise above 1/2 max displacement
                 index_initial_oscillation = find(probe_data > probe_data(1) + 0.5 * (max(probe_data) - probe_data(1)), 1, 'first');
 
                 % Prepare data for fitting
