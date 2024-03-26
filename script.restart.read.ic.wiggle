@@ -157,6 +157,7 @@ print kt=${kt} append ./outputs/meta_data.${friction_status}.pressure_${dimensio
 print gamma_n=${gamma_n} append ./outputs/meta_data.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.txt screen no
 print gamma_t=${gamma_t} append ./outputs/meta_data.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.txt screen no
 print dimensionless_p=${dimensionless_p} append ./outputs/meta_data.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.txt screen no
+print driving_amplitude=${AMP} append ./outputs/meta_data.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.txt screen no
 
 ###############################################
 # RUN until 5 cycles have been completed
