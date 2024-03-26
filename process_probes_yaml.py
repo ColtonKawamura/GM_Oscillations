@@ -38,6 +38,7 @@ for yaml_file in yaml_files:
 
         # Loop through each document (timestep) in the YAML file
         for d in data:
+            print("Reading data from", yaml_file)
             # Append the entire timestep data to the list
             timesteps.append(d)
 
@@ -46,6 +47,7 @@ for yaml_file in yaml_files:
         # Write header
         file.write("Timestep")
         for N in range(len(timesteps[0]['data'])):
+            print("Writing Z-Output for", yaml_file)
             file.write(f" Probe{N}")
         file.write("\n")
 
