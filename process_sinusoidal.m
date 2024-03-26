@@ -47,7 +47,7 @@ for i = 1:numel(data_files_info)
         num_probes = size(probe_columns, 2);
 
         % Pull parameter data from the simulation (if necessary)
-       % Construct the meta_data file name dynamically
+        % Construct the meta_data file name dynamically
         metafilename = sprintf('./outputs/meta_data.%s.pressure_%g.freq_%g.amp_%g.txt', friction_status, pressure, frequency, amplitude);
         
         % Open the meta_data file for reading
