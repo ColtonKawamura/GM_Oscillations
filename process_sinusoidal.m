@@ -31,10 +31,6 @@ for i = 1:numel(data_files_info)
         amplitude = str2double(match{4});
         
         fprintf('Processing data file: %s\n', data_file_path);
-        % fprintf('Friction status: %s\n', friction_status);
-        % fprintf('Pressure: %g\n', pressure);
-        % fprintf('Frequency: %g\n', frequency);
-        % fprintf('Amplitude: %g\n', amplitude);
         
         % Perform data processing and sinusoidal fitting here
         % Use the extracted parameters (friction_status, pressure, frequency, amplitude)
