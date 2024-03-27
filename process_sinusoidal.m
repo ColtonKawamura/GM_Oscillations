@@ -66,6 +66,7 @@ for i = 1:numel(data_files_info)
         gamma_n = NaN;
         gamma_t = NaN;
         dimensionless_p = NaN;
+        driving_amplitude = NaN;
 
         % Read the file line by line
         while ~feof(fileID)
@@ -92,6 +93,9 @@ for i = 1:numel(data_files_info)
             elseif ~isempty(strfind(line, 'dimensionless_p'))
                 dimensionless_p_str = line(strfind(line, 'dimensionless_p=')+16:end);
                 dimensionless_p = str2double(dimensionless_p_str);
+            elseif ~isempty(strfind(line, 'driving_amplitude'))
+                driving_amplitude_str = line(strfind(line, 'driving_amplitude=')+18:end);
+                driving_amplitude = str2double(driving_amplitude_str);
             end
         end
 
@@ -118,7 +122,7 @@ for i = 1:numel(data_files_info)
                 cost_function = @(b) sum((fit_function(b, fit_x) - fit_y).^2);
 
                 % Initial guess
-                initial_amplitude = 0.001;
+                initial_amplitude =  driving_amplitude;
                 initial_phase_offset = 0;
                 initial_guess = [initial_amplitude; initial_phase_offset];
 
