@@ -10,7 +10,9 @@ data_files_info = dir(fullfile(outputs_directory, 'plotdata_probes_zdisp.*.txt')
 % Initialize output vectors
 initial_position_vector = [];
 amplitude_vector = [];
+phase_vector = [];
 valid_probe_numbers = [];
+initial_phase_offset = 0;
 
 % Loop through each data file found
 for i = 1:numel(data_files_info)
@@ -123,11 +125,13 @@ for i = 1:numel(data_files_info)
 
                 % Initial guess
                 initial_amplitude =  driving_amplitude;
-                initial_phase_offset = 0;
                 initial_guess = [initial_amplitude; initial_phase_offset];
 
                 % Perform fitting
                 [s, ~, ~] = fminsearch(cost_function, initial_guess);
+
+                % Update the initial phase offset for the next iteration
+                 initial_phase_offset = s(2);
 
                 % Calculate correlation coefficient
                 [R, ~] = corrcoef(fit_function(s, fit_x), fit_y);
@@ -140,6 +144,7 @@ for i = 1:numel(data_files_info)
                     % If good, store the vector and probe number
                     initial_position_vector = [initial_position_vector, probe_data(1)];
                     amplitude_vector = [amplitude_vector, s(1)];
+                    phase_vector = [phase_vector, s(2)];
                     valid_probe_numbers = [valid_probe_numbers, probe_number];
                     clear 'R';
                     clear 'R2';
