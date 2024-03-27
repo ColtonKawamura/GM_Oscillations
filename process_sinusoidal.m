@@ -216,7 +216,7 @@ for i = 1:numel(data_files_info)
             attenuation = abs(slope);
 
             % Append the new data to the existing data
-            new_data = [driving_frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p];
+            new_data = [driving_frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p, driving_amplitude];
             combined_data = [existing_data; new_data];
 
             % Write the combined data to the attenuation file
