@@ -206,6 +206,38 @@ for i = 1:numel(data_files_info)
             print(plot_filename, '-dpng');
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % Plot Wavenumber
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % Plot initial position vs. phase as dots
+            figure;
+            scatter(initial_position_vector, phase_vector, 'o');
+            hold on;  % Keep the plot for adding the fitted line
+
+            % Fit a line to the data
+            p = polyfit(initial_position_vector, phase_vector, 1);
+            fitted_line = polyval(p, initial_position_vector);
+
+            % Plot the fitted line
+            plot(initial_position_vector, fitted_line, '-r');
+
+            % Store the slope of the line as wavenumber
+            wavenumber = p(1);
+            wavespeed = driving_frequency/wavenumber;
+
+            % Label the axes
+            xlabel('x(t=0)');
+            ylabel('\Delta\phi');
+
+            % Set the title with variables
+            title(sprintf('f=%.2f, k_n=%.2f, gamma_n=%.2f, P=%.2f, k=%.2f', driving_frequency, kn, gamma_n, dimensionless_p, wavenumber), 'FontSize', 12);
+
+            % Hold off to finish the plotting
+            hold off;
+
+            plot_filename = sprintf('./outputs/wavenumber_plot_pressure_%s_freq_%s.png',num2str(dimensionless_p), num2str(driving_frequency));
+            print(plot_filename, '-dpng');
+
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Export driving_frequency, attenuation, kn, kt, gamma_n, gamma_t
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Construct the filename for the attenuation data dynamically
@@ -221,7 +253,7 @@ for i = 1:numel(data_files_info)
             attenuation = abs(slope);
 
             % Append the new data to the existing data
-            new_data = [driving_frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p, driving_amplitude];
+            new_data = [driving_frequency, attenuation, kn, kt, gamma_n, gamma_t, dimensionless_p, driving_amplitude, wavenumber, wavespeed];
             combined_data = [existing_data; new_data];
 
             % Write the combined data to the attenuation file
