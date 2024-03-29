@@ -231,6 +231,13 @@ for i = 1:numel(data_files_info)
             xlabel('x(t=0)');
             ylabel('\Delta\phi');
 
+            % Customizing y-axis to show multiples of pi
+            y_max = max(unwrapped_phase_vector);  % Get the maximum y value
+            y_min = min(unwrapped_phase_vector);  % Get the minimum y value
+            yticks = [ceil(y_min/pi)*pi:pi:floor(y_max/pi)*pi];  % Define y-ticks in steps of pi
+            yticklabels = arrayfun(@(x) sprintf('%.2f\\pi', x/pi), yticks, 'UniformOutput', false);  % Create custom y-tick labels
+            set(gca, 'YTick', yticks, 'YTickLabel', yticklabels);  % Apply custom ticks and labels
+
             % Set the title with variables
             title(sprintf('f=%.2f, k_n=%.2f, gamma_n=%.2f, P=%.2f, k=%.2f', driving_frequency, kn, gamma_n, dimensionless_p, wavenumber), 'FontSize', 12);
 
