@@ -211,6 +211,7 @@ for i = 1:numel(data_files_info)
             % Plot initial position vs. phase as dots
             figure;
             scatter(initial_position_vector, phase_vector, 'o');
+            grid on;
             hold on;  % Keep the plot for adding the fitted line
 
             % Fit a line to the data
