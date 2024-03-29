@@ -13,6 +13,7 @@ amplitude_vector = [];
 phase_vector = [];
 valid_probe_numbers = [];
 initial_phase_offset = 0;
+initial_amplitude =  driving_amplitude;
 
 % Loop through each data file found
 for i = 1:numel(data_files_info)
@@ -124,13 +125,13 @@ for i = 1:numel(data_files_info)
                 cost_function = @(b) sum((fit_function(b, fit_x) - fit_y).^2);
 
                 % Initial guess
-                initial_amplitude =  driving_amplitude;
                 initial_guess = [initial_amplitude; initial_phase_offset];
 
-                % Perform fitting
+                % Perform fitting. Outputs: s(1) = amplitude fit, s(2)=phase fit
                 [s, ~, ~] = fminsearch(cost_function, initial_guess);
 
-                % Update the initial phase offset for the next iteration
+                % Update the initial guess offset for the next iteration
+                initial_amplitude = s(1);
                 initial_phase_offset = s(2);
 
                 % Calculate correlation coefficient
