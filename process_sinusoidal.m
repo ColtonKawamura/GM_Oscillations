@@ -208,14 +208,16 @@ for i = 1:numel(data_files_info)
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Plot Wavenumber
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            unwrapped_phase_vector = unwrap(phase_vector);
+
             % Plot initial position vs. phase as dots
             figure;
-            scatter(initial_position_vector, phase_vector, 'o');
+            scatter(initial_position_vector, unwrapped_phase_vector, 'o');
             grid on;
             hold on;  % Keep the plot for adding the fitted line
 
             % Fit a line to the data
-            p = polyfit(initial_position_vector, phase_vector, 1);
+            p = polyfit(initial_position_vector, unwrapped_phase_vector, 1);
             fitted_line = polyval(p, initial_position_vector);
 
             % Plot the fitted line
