@@ -131,7 +131,7 @@ for i = 1:numel(data_files_info)
                 [s, ~, ~] = fminsearch(cost_function, initial_guess);
 
                 % Update the initial phase offset for the next iteration
-                 initial_phase_offset = s(2);
+                initial_phase_offset = s(2);
 
                 % Calculate correlation coefficient
                 [R, ~] = corrcoef(fit_function(s, fit_x), fit_y);
@@ -214,7 +214,7 @@ for i = 1:numel(data_files_info)
             % Plot initial position vs. phase as dots
             figure;
             scatter(x, y, 'o');
-            hold on;  % Keep the plot for adding the fitted line
+            hold on; 
 
             % Fit a line to the data
             p = polyfit(x, y, 1);
