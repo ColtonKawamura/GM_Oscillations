@@ -208,7 +208,7 @@ for i = 1:numel(data_files_info)
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Plot Wavenumber
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            unwrapped_phase_vector = unwrap(phase_vector,1);
+            unwrapped_phase_vector = unwrap(phase_vector);
 
             % Plot initial position vs. phase as dots
             figure;
