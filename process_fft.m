@@ -248,7 +248,7 @@ for i = 1:numel(data_files_info)
             wavespeed = driving_frequency/wavenumber;
 
             % Label the axes
-            xlabel('x(t=0)');
+            xlabel('z(t=0)');
             ylabel('\Delta\phi');
 
             % Customizing y-axis to show multiples of pi
