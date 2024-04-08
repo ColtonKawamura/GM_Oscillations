@@ -148,7 +148,7 @@ compute_modify	thermo_temp dynamic/dof yes
 # dump movie_probes probes movie 100 ./movie.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
 # dump VMD_probes probes xyz 100 VMD_out.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.xyz
 dump yaml_probes probes yaml 100 ./outputs/dump_probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.yaml id type x y z
-dump yaml_lower lower yaml 100 ./outputs/dump_lower.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.yaml id type x y z
+# dump yaml_lower lower yaml 100 ./outputs/dump_lower.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.yaml id type x y z
 dump_modify yaml_probes format line "%d %d %.20f %.20f %.20f"
 print dt=${dt} file ./outputs/meta_data.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.txt
 print frequency=${FREQ} append ./outputs/meta_data.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.txt screen no
