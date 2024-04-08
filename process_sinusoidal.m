@@ -7,13 +7,6 @@ pattern = 'plotdata_probes_zdisp\.(\w+)\.pressure_([\d.]+)\.freq_([\d.]+)\.amp_(
 % Use dir to find all data files in the outputs directory after concatenating outputs_directory with 'whatever file'
 data_files_info = dir(fullfile(outputs_directory, 'plotdata_probes_zdisp.*.txt'));
 
-% Initialize output vectors
-initial_position_vector = [];
-amplitude_vector = [];
-phase_vector = [];
-valid_probe_numbers = [];
-initial_phase_offset = 0;
-
 % Loop through each data file found
 for i = 1:numel(data_files_info)
     % Get the file name
@@ -24,6 +17,14 @@ for i = 1:numel(data_files_info)
     
     % Extract the values from the file name using regular expressions
     match = regexp(data_file, pattern, 'tokens', 'once');
+
+    % Initialize output vectors
+    initial_position_vector = [];
+    amplitude_vector = [];
+    phase_vector = [];
+    valid_probe_numbers = [];
+    initial_phase_offset = 0;
+
     
     % Display the extracted values
     if ~isempty(match)
