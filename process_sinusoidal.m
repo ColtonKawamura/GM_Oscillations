@@ -190,16 +190,9 @@ for i = 1:numel(data_files_info)
             semilogy(initial_position_vector, fit_line, 'r-', 'DisplayName', 'Linear Fit');
             xlabel('Distance');
             ylabel('Probe Oscillation Amplitude');
-            title('Linear Fit of Attenuation of Oscillation in Probes', 'FontSize', 16);
+            title(sprintf('f=%.2f, k_n=%.2f, gamma_n=%.2f, P=%.2f, alpha=%.2f', driving_frequency, kn, gamma_n, dimensionless_p, slope), 'FontSize', 12);
             legend('show');
             grid on;
-
-
-            % Add equation text to the plot
-            text_location_x = max(initial_position_vector);
-            text_location_y = max(abs(amplitude_vector));
-            text(text_location_x, text_location_y, equation_str, 'FontSize', 12, 'Color', 'k');
-            hold off;
 
             % Save the plot as an image file with driving frequency included in the filename
             plot_filename = sprintf('./outputs/linear_fit_plot_pressure_%s_freq_%s.png',num2str(dimensionless_p), num2str(driving_frequency));
