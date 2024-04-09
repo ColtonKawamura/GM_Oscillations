@@ -73,7 +73,7 @@ neigh_modify	exclude type 2 3
 ###############################################
 # GROUPS
 ###############################################
-region probe_region cylinder z 0 0 1 -2 EDGE units box
+region probe_region cylinder z 0 0 .75 -2 EDGE units box
 group probes region probe_region 
 
 ###############################################
