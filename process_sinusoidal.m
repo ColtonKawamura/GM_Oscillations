@@ -139,7 +139,7 @@ for i = 1:numel(data_files_info)
                 R2 = R(1, 2)^2;
 
                 % Check if R2 is less than 0.5
-                if R2 < 0.5
+                if R2 < 0.7
                     % disp(['R^2 value is less than 0.5 for probe ' num2str(probe_number) ', continuing with the next probe.']);
                 else
                     % If good, store the vector and probe number
