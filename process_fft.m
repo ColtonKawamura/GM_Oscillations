@@ -142,7 +142,7 @@ for i = 1:numel(data_files_info)
                     
                     % Check if the signs of the slopes are different and if the values on both sides are greater than the value at the desired frequency
                     if sign_slope_before ~= sign_slope_after && normalized_fft_data(idx_desired - 1) < normalized_fft_data(idx_desired) && normalized_fft_data(idx_desired + 1) < normalized_fft_data(idx_desired)
-                        fprintf('Peak found around the driving frequency. Performing sinusoidal fit for phase\n');
+                        % fprintf('Peak found around the driving frequency. Performing sinusoidal fit for phase\n');
 
                         % Find initial oscillation index when displacement rise above 1/2 max displacement
                         index_initial_oscillation = find(probe_data > probe_data(1) + 0.5 * (max(probe_data) - probe_data(1)), 1, 'first');
@@ -170,10 +170,10 @@ for i = 1:numel(data_files_info)
                         phase_vector = [phase_vector, s(2)];
                         valid_probe_numbers = [valid_probe_numbers, probe_number];
                     else
-                        fprintf('*** Alert: No peak found around the driving frequency. ***\n');
+                        % fprintf('*** Alert: No peak found around the driving frequency. ***\n');
                     end
                 else
-                    fprintf('*** Alert: No peak found around the driving frequency. ***\n');
+                    % fprintf('*** Alert: No peak found around the driving frequency. ***\n');
                 end
             catch
             end
