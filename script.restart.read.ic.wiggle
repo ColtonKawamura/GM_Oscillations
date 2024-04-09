@@ -58,7 +58,7 @@ timestep 	${dt}
 variable	time equal step*dt
 # variable	dimensionless_p equal ${P}*${d_ave}/${kn}
 variable	P equal ${dimensionless_p}*${kn}/${d_ave}
-variable	required_sim_time equal 5*${PER}
+variable	required_sim_time equal 7*${PER}
 
 ###############################################
 # ENVIRONMENT
