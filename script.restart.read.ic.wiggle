@@ -73,7 +73,7 @@ neigh_modify	exclude type 2 3
 ###############################################
 # GROUPS
 ###############################################
-region probe_region cylinder z 0 0 .5 -2 EDGE units box
+region probe_region cylinder z 0 0 1 -2 EDGE units box
 group probes region probe_region 
 
 ###############################################
@@ -145,7 +145,7 @@ compute_modify	thermo_temp dynamic/dof yes
 # OUTPUTS
 ###############################################
 # dump movie_system all movie 100 ./movie.wiggle.full_system.${friction_status}.pressure_${didimensionless_pme}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
-# dump movie_probes probes movie 100 ./movie.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
+ dump movie_probes probes movie 100 ./movie.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.gif type type zoom 2.0 adiam 1.5 size 1280 720
 # dump VMD_probes probes xyz 100 VMD_out.wiggle.probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.xyz
 dump yaml_probes probes yaml 100 ./outputs/dump_probes.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.yaml id type x y z
 # dump yaml_lower lower yaml 100 ./outputs/dump_lower.${friction_status}.pressure_${dimensionless_p}.freq_${FREQ}.amp_${AMP}.yaml id type x y z
