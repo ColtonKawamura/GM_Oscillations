@@ -167,7 +167,7 @@ for i = 1:numel(data_files_info)
                         initial_phase_offset = s(2);
                         amplitude_vector = [amplitude_vector, amplitude]; % Pulls amplitude from fft calculation
                         initial_position_vector = [initial_position_vector, probe_data(1)];
-                        phase_vector = [phase_vector, angle(normalized_fft_data)];
+                        phase_vector = [phase_vector, angle(normalized_fft_data(idx_desired))];
                         % phase_vector = [phase_vector, s(2)];
                         valid_probe_numbers = [valid_probe_numbers, probe_number];
                     else
