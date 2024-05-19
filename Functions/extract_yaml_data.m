@@ -10,16 +10,16 @@ function [index_particles, position_particles, time_vector] = extract_yaml_data(
     position_particles = [];
     time_vector = [];
 
-    % Loop through each document and parse the data
-    for i = 1:length(timestep_content)
-        doc = strtrim(timestep_content{i});
-        if isempty(doc)
+    % Loop through each timestep-content-block and parse the data
+    for timestep_content_nn = 1:length(timestep_content)
+        current_timestep_content = strtrim(timestep_content{timestep_content_nn});
+        if isempty(current_timestep_content)
             continue;
         end
 
         % Extract timestep
         timestep_pattern = 'timestep:\s+(\d+)'; % Matches emptyspace "\s" and "+" any gruop of digits "(\d+)"
-        timestep_tokens = regexp(doc, timestep_pattern, 'tokens'); % saves the regular expression "regexp" from "doc" that matches "timestep_pattern". "token" only saves that which is in parathesis
+        timestep_tokens = regexp(current_timestep_content, timestep_pattern, 'tokens'); % saves the regular expression "regexp" from "current_timestep_content" that matches "timestep_pattern". "token" only saves that which is in parathesis
         if ~isempty(timestep_tokens)
             timestep = str2double(timestep_tokens{1}{1}); % Turns a string to a number. the first {1} access the first cell, the second {1} pulls the actual digit
             time_vector(end + 1) = timestep; 
@@ -27,12 +27,12 @@ function [index_particles, position_particles, time_vector] = extract_yaml_data(
 
         % Extract particle data
         data_pattern = 'data:\s*\n((?:\s*-\s*\[.*?\]\n?)*)'; % the "*" allows for multiple "\s", "\n" new line, "-\s" makes sure it starts with new line, "\[.*?\]" matches anything inside brackets as small a possible
-        data_tokens = regexp(doc, data_pattern, 'tokens', 'dotexceptnewline'); % "dotexceptnewline matches any " . " NOT on a new line
+        data_tokens = regexp(current_timestep_content, data_pattern, 'tokens', 'dotexceptnewline'); % "dotexceptnewline matches any " . " NOT on a new line
         if ~isempty(data_tokens)
             data_str = data_tokens{1}{1};
             data_lines = regexp(data_str, '\-\s*\[(.*?)\]', 'tokens');
-            for j = 1:length(data_lines)
-                data_line = str2num(data_lines{j}{1}); 
+            for dataline_nn = 1:length(data_lines)
+                data_line = str2num(data_lines{dataline_nn}{1}); 
                 particle_id = data_line(1);
                 x = data_line(3);
                 y = data_line(4);
