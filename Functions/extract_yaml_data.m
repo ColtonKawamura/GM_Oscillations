@@ -30,7 +30,7 @@ function [index_particles, position_particles, time_vector] = extract_yaml_data(
         data_tokens = regexp(current_timestep_content, data_pattern, 'tokens', 'dotexceptnewline'); % "dotexceptnewline matches any " . " NOT on a new line
         if ~isempty(data_tokens)
             data_str = data_tokens{1}{1};
-            data_lines = regexp(data_str, '\-\s*\[(.*?)\]', 'tokens');
+            data_lines = regexp(data_str, '\-\s*\[(.*?)\]', 'tokens'); % saves what's in parathesis after "-", zero or more whitespace, then looks inside brackets
             for dataline_nn = 1:length(data_lines)
                 data_line = str2num(data_lines{dataline_nn}{1}); 
                 particle_id = data_line(1);
