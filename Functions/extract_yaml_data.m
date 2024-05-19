@@ -3,7 +3,7 @@ function [index_particles, position_particles, time_vector] = extract_yaml_data(
     file_content = fileread(file_path);
 
     % Split the content by the document separator '---'
-    documents = regexp(file_content, '---', 'split');
+    timestep_content = regexp(file_content, '---', 'split');
 
     % Initialize variables to hold the extracted data
     index_particles = [];
@@ -11,8 +11,8 @@ function [index_particles, position_particles, time_vector] = extract_yaml_data(
     time_vector = [];
 
     % Loop through each document and parse the data
-    for i = 1:length(documents)
-        doc = strtrim(documents{i});
+    for i = 1:length(timestep_content)
+        doc = strtrim(timestep_content{i});
         if isempty(doc)
             continue;
         end
