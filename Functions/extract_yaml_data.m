@@ -1,5 +1,5 @@
 function [index_particles, position_particles, time_vector] = extract_yaml_data(file_path)
-    % Read the entire file content; needs to be file_path = './outputs/dump_probes.Friction_ON.pressure_0.1.freq_0.1.amp_0.001.yaml';
+    % read the entire file content; needs to be file_path = './outputs/dump_probes.Friction_ON.pressure_0.1.freq_0.1.amp_0.001.yaml';
     file_content = fileread(file_path);
 
     % Split the content by the document separator '---'
@@ -33,7 +33,7 @@ function [index_particles, position_particles, time_vector] = extract_yaml_data(
             data_lines = regexp(data_str, '\-\s*\[(.*?)\]', 'tokens'); % saves what's in parathesis after "-", zero or more whitespace, then looks inside brackets
             for dataline_nn = 1:length(data_lines)
                 data_line = str2num(data_lines{dataline_nn}{1}); 
-                particle_id = data_line(1);
+                particle_id = data_line(1);o
                 x = data_line(3);
                 y = data_line(4);
                 z = data_line(5);
