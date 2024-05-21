@@ -1,5 +1,5 @@
 function [index_particles, position_particles, time_vector] = extract_yaml_data(file_path)
-    % read the entire file content; needs to be file_path = './outputs/dump_probes.Friction_ON.pressure_0.1.freq_0.1.amp_0.001.yaml';
+    % READ the entire file content; needs to be file_path = './outputs/dump_probes.Friction_ON.pressure_0.1.freq_0.1.amp_0.001.yaml';
     file_content = fileread(file_path);
 
     % Split the content by the document separator '---'
